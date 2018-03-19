@@ -14,7 +14,7 @@ ENV SBT_VERSION 1.1.1
 # Scala expects this file
 RUN touch /usr/lib/jvm/java-8-openjdk-amd64/release
 
-EXPOSE 9000 9000
+EXPOSE 9000
 
 # Install Scala
 ## Piping curl directly in tar
@@ -32,6 +32,9 @@ RUN \
   apt-get install sbt && \
   sbt sbtVersion
 
+RUN \
+    apt-get -y install mysql-server
+
 # Define working directory
 WORKDIR /root
 
@@ -39,4 +42,4 @@ WORKDIR /root
 RUN \
 curl -o play-example.zip  https://example.lightbend.com/v1/download/play-scala-slick-example && unzip play-example.zip && \
 cd play-scala-slick-example/ && \
-sbt
+sbt run
