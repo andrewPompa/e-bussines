@@ -5,7 +5,7 @@ create table "product" (
   "price" numeric not null,
   "description" text not null,
   category int not null,
-  foreign key(category) references category(id)
+  foreign key(category) references `category`(id)
 );
 
 create table "category" (
@@ -17,8 +17,8 @@ create table "category" (
 create table "product_opinion" (
   "product_id" integer not null,
   "opinion_id" integer not null,
-  foreign key (product_id) references product (id),
-  foreign key (opinion_id) references opinion (id)
+  foreign key (product_id) references `product` (id),
+  foreign key (opinion_id) references `opinion` (id)
 );
 
 
@@ -30,14 +30,14 @@ create table "opinion" (
 create table "order" (
   "id"         integer not null primary key autoincrement,
   "product_id" integer not null,
-  foreign key (product_id) references product (id)
+  foreign key (product_id) references `product` (id)
 );
 
 create table "pricing" (
   "id"         integer not null primary key autoincrement,
   "order_id" integer not null,
   "done" boolean default false,
-  foreign key (order_id) references order (id)
+  foreign key (order_id) references `order` (id)
 );
 
 
