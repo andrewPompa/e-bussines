@@ -1,17 +1,15 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './Products.css';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import {Link} from "react-router-dom";
-import GridListTile from "@material-ui/core/es/GridListTile/GridListTile";
-import GridList from "@material-ui/core/es/GridList/GridList";
-import GridListTileBar from "@material-ui/core/es/GridListTileBar/GridListTileBar";
-import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import Search from '@material-ui/icons/Search';
 import AttachMoney from "@material-ui/icons/es/AttachMoney";
+import Typography from "@material-ui/core/es/Typography/Typography";
+import Link from "react-router-dom/es/Link";
 
 const styles2 = theme => ({
     root: {
@@ -40,24 +38,25 @@ class Products extends Component {
     };
 
     render() {
-        const { selectedOption } = this.state;
+
+
+        const {selectedOption} = this.state;
         const products = [
             {id: 0, name: 'Produkt 1', description: 'Opis 1', price: 21.12},
             {id: 1, name: 'Produkt 2', description: 'Opis 2', price: 41.12},
             {id: 2, name: 'Produkt 3', description: 'Opis 3', price: 17.43}
         ];
         const productsList = products.map((product) => {
-            return <GridListTile key={product.id}>
-                    <GridListTileBar
-                        title={product.name}
-                        subtitle={<p><AttachMoney/> {product.price}</p>}
-                        actionIcon={
-                            <IconButton>
-                                <li><Link to={`product/${product.id}`}> <InfoIcon/></Link></li>
-                            </IconButton>
-                        }
-                    />
-                </GridListTile>
+            return <ListItem key={product.id}>
+                <ListItemText
+                    primary={
+                        <Typography variant="display1" color="inherit">
+                            <Link to={`/product/${product.id}`}>{product.name}</Link> <br/><AttachMoney/>{product.price}
+                        </Typography>
+                    }
+                    secondary={product.description}
+                />
+            </ListItem>
         });
         return (
             <div className="Products">
@@ -68,20 +67,17 @@ class Products extends Component {
                         value={selectedOption}
                         onChange={this.handleChange}
                         options={[
-                            { value: 'one', label: 'One' },
-                            { value: 'two', label: 'Two' },
+                            {value: 'one', label: 'One'},
+                            {value: 'two', label: 'Two'},
                         ]}
                     />
                 </div>
-                <GridList cellHeight={180} >
-                    <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-                        <ListSubheader component="div">Lista produktów</ListSubheader>
-                    </GridListTile>
+                <List>
                     {productsList}
-                </GridList>
+                </List>
             </div>
         );
     }
 }
 
-export default withStyles(styles2) (Products);
+export default withStyles(styles2)(Products);

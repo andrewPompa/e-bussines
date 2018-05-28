@@ -1,8 +1,8 @@
 import React from 'react';
 import {Route, Switch} from "react-router-dom";
-import Sample from "../Sample/Sample";
-import Products from "../Products/Products";
-import Product from "../Product/Product";
+import Sample from "../sample/Sample";
+import Products from "../products/Products";
+import Product from "../product/Product";
 
 
 const Main = () => (
