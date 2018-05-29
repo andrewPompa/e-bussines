@@ -5,10 +5,13 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import rootReducer from './store/reducers/';
 import {Provider} from 'react-redux';
-import {createStore} from 'redux'
+import {createStore, applyMiddleware } from 'redux'
 import {BrowserRouter} from "react-router-dom";
+import thunk from 'redux-thunk';
 
-const store = createStore(rootReducer);
+const store = createStore(
+    rootReducer,
+    applyMiddleware(thunk));
 
 ReactDOM.render(
     <BrowserRouter>

@@ -10,6 +10,13 @@ import Search from '@material-ui/icons/Search';
 import AttachMoney from "@material-ui/icons/es/AttachMoney";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Link from "react-router-dom/es/Link";
+import {connect} from 'react-redux';
+import {getProducts} from "../../store/actions/productsActions";
+import {
+    decrementQuantityOfProduct,
+    incrementQuantityOfProduct,
+    removeProductFromBasket
+} from "../../store/actions/basketActions";
 
 const styles2 = theme => ({
     root: {
@@ -29,6 +36,10 @@ const styles2 = theme => ({
 });
 
 class Products extends Component {
+    constructor(props) {
+        super(props);
+        props.loadProducts();
+    }
     state = {
         selectedOption: '',
     };
@@ -38,14 +49,9 @@ class Products extends Component {
     };
 
     render() {
-
-
         const {selectedOption} = this.state;
-        const products = [
-            {id: 0, name: 'Produkt 1', description: 'Opis 1', price: 21.12},
-            {id: 1, name: 'Produkt 2', description: 'Opis 2', price: 41.12},
-            {id: 2, name: 'Produkt 3', description: 'Opis 3', price: 17.43}
-        ];
+        const {products} = this.props;
+
         const productsList = products.map((product) => {
             return <ListItem key={product.id}>
                 <ListItemText
@@ -79,5 +85,14 @@ class Products extends Component {
         );
     }
 }
+const mapStateToProps = (state) => {
+    return {products: state.products.products};
+};
 
-export default withStyles(styles2)(Products);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loadProducts: () => dispatch(getProducts())
+    }
+};
+
+export default withStyles(styles2)(connect(mapStateToProps, mapDispatchToProps)(Products));
