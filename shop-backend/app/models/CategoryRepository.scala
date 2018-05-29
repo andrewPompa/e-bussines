@@ -29,10 +29,10 @@ class CategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
   val category = TableQuery[CategoryTable]
 
   def create(name: String): Future[Category] = db.run {
-    (category.map(c => (c.name))
+    (category.map(c => c.name)
       returning category.map(_.id)
       into ((name, id) => Category(id, name))
-      ) += (name)
+      ) += name
   }
 
   def list(): Future[Seq[Category]] = db.run {
