@@ -23,7 +23,7 @@ class Header extends Component {
                             Sklep&nbsp;&nbsp;&nbsp;
                         </Typography>
                         <Link to='/products'><Button>&nbsp;&nbsp;Produkty&nbsp;&nbsp;</Button></Link>
-                        <Link to='/sample'><Button>&nbsp;&nbsp;Koszyk&nbsp;&nbsp;</Button></Link>
+                        <Link to='/basket'><Button>&nbsp;&nbsp;Koszyk&nbsp;&nbsp;</Button></Link>
                         <Link to='/sample'><Button>&nbsp;&nbsp;Zamówienia&nbsp;&nbsp;</Button></Link>
                         <Link to='/sample'><Button>&nbsp;&nbsp;Zarządzaj produktami&nbsp;&nbsp;</Button></Link>
                     </Toolbar>

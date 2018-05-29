@@ -1,4 +1,3 @@
-// props.match.params.id
 const initialState = {
     id: 0,
     name: 'Produkt testowy',

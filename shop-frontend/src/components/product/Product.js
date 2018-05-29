@@ -13,6 +13,7 @@ import TextField from '@material-ui/core/TextField';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
 import {addOpinion} from "../../store/actions";
+import {addProductToBasket} from "../../store/actions/basketActions";
 
 const styles = theme => ({
     root: {
@@ -36,15 +37,13 @@ const styles = theme => ({
 export class Product extends React.Component {
     constructor(props) {
         super(props);
-        console.log(props);
         this.state = {
             newOpinion: ''
         };
     }
 
     render() {
-        const {product, classes} = this.props;
-
+        const {product, classes, addProduct} = this.props;
         return <div className={classes.root}>
             <Typography variant="display3" color="inherit">
                 {product.name}: {product.price}$
@@ -82,7 +81,7 @@ export class Product extends React.Component {
                     <Button onClick={() => this.onAddOpinionButtonClick()}>Wystaw opinie</Button>
                 </ListItem>
             </List>
-            <Button size="large">Dodaj do koszyka <AddShoppingCart color={"secondary"}/></Button>
+            <Button size="large" onClick={() => addProduct(product)}>Dodaj do koszyka <AddShoppingCart color={"secondary"}/></Button>
         </div>;
     }
 
@@ -93,7 +92,6 @@ export class Product extends React.Component {
     }
 
     onAddOpinionButtonClick() {
-        console.log('sss');
         this.props.addNewOpinion(this.state.newOpinion);
     }
 }
@@ -104,7 +102,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addNewOpinion: (text) => dispatch(addOpinion(text))
+        addNewOpinion: (text) => dispatch(addOpinion(text)),
+        addProduct: (product) => dispatch(addProductToBasket(product))
     }
 };
 
