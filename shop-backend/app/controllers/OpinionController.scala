@@ -7,16 +7,16 @@ import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesCon
 
 import scala.concurrent.ExecutionContext
 
-class OpinionController @Inject()(opinionRepository: OpinionRepository,
+class OpinionController @Inject()(productRepository: ProductRepository,
                                   cc: MessagesControllerComponents)
                                  (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
   def getOpinionOfProductId(productId: Long): Action[AnyContent] = Action.async { implicit request =>
-    opinionRepository.listOpinionOfProduct(productId).map { opinions =>
+    productRepository.listOpinionOfProduct(productId).map { opinions =>
       Ok(Json.toJson(opinions))
     }
   }
   def getAll:  Action[AnyContent] = Action.async { implicit request =>
-    opinionRepository.list().map { opinions =>
+    productRepository.list().map { opinions =>
       Ok(Json.toJson(opinions))
     }
   }

@@ -3,11 +3,12 @@
 # ~~~~
 
 # Home page
-GET         /products                  controllers.ProductsController.getProducts
-POST        /products                  controllers.ProductsController.addProduct
+GET         /products                   controllers.ProductsController.getProducts
+POST        /products                   controllers.ProductsController.addProduct
+GET        /products/:productId        controllers.ProductsController.getProduct(productId: Long)
 
-GET         /opinion/:productId        controllers.OpinionController.getOpinionOfProductId(productId: Long)
-GET         /opinion      controllers.OpinionController.getAll
+GET         /opinion/:productId         controllers.OpinionController.getOpinionOfProductId(productId: Long)
+GET         /opinion                    controllers.OpinionController.getAll
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file              controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
