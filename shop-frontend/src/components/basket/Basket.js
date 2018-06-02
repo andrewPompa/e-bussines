@@ -46,10 +46,6 @@ const styles = theme => {
 };
 
 export class Basket extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const {basketItems, classes, removeProduct, incrementQuantity, decrementQuantity} = this.props;
         return <div className={classes.basket}>

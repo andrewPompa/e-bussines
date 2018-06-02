@@ -12,11 +12,6 @@ import Typography from "@material-ui/core/es/Typography/Typography";
 import Link from "react-router-dom/es/Link";
 import {connect} from 'react-redux';
 import {getProducts} from "../../store/actions/productsActions";
-import {
-    decrementQuantityOfProduct,
-    incrementQuantityOfProduct,
-    removeProductFromBasket
-} from "../../store/actions/basketActions";
 
 const styles2 = theme => ({
     root: {

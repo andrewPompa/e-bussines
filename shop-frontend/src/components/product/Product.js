@@ -12,8 +12,8 @@ import Button from "@material-ui/core/es/Button/Button";
 import TextField from '@material-ui/core/TextField';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
-import {addOpinion} from "../../store/actions";
 import {addProductToBasket} from "../../store/actions/basketActions";
+import {addOpinion, loadProduct} from "../../store/actions/productActions";
 
 const styles = theme => ({
     root: {
@@ -37,6 +37,8 @@ const styles = theme => ({
 export class Product extends React.Component {
     constructor(props) {
         super(props);
+        const id = props.match.params.id;
+        props.loadProduct(id);
         this.state = {
             newOpinion: ''
         };
@@ -54,22 +56,23 @@ export class Product extends React.Component {
             {product.tags.map(tag => {
                 return (
                     <Chip
-                        key={tag}
-                        label={tag}
+                        key={`tag_${tag.id}`}
+                        label={tag.text}
                     />
                 );
             })}
             <List>
-                {product.opinions.map(opinion => (
-                    <ListItem key={opinion} className={classes.listItem}>
+                {product.opinions.map(opinion => {
+                    return <ListItem key={`opinion_${opinion.id}`} className={classes.listItem}>
                         <Avatar>
                             <WorkIcon/>
                         </Avatar>
-                        <ListItemText primary={opinion}/>
+                        <ListItemText primary={opinion.text}/>
                     </ListItem>
-                ))}
+                })}
                 <ListItem>
                     <TextField
+                        key='opinion_text_field'
                         value={this.state.newOpinion}
                         onChange={e => this.updateInputValue(e)}
                         label="Napisz coś o tym produkcie"
@@ -97,11 +100,12 @@ export class Product extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {product: state.product};
+    return {product: state.product.data};
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        loadProduct: (id) => dispatch(loadProduct(id)),
         addNewOpinion: (text) => dispatch(addOpinion(text)),
         addProduct: (product) => dispatch(addProductToBasket(product))
     }
