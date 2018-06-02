@@ -1,4 +1,3 @@
-export const addOpinion = text => ({
-    type: 'ADD_OPINION',
-    payload: text,
-});
+import product from './productReducer'
+import basket from './basketReducer'
+import products from "./productsReducer";

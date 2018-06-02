@@ -20,18 +20,18 @@ id integer not null primary key autoincrement,
 name varchar not null
 );
 
-
-create table "product_opinion" (
-  product_id integer not null,
-  opinion_id integer not null,
-  foreign key (product_id) references `product` (id),
-  foreign key (opinion_id) references `opinion` (id)
-);
-
-
 create table "opinion" (
   "id" integer not null primary key autoincrement,
-  "text" text not null
+  "product_id" integer not null,
+  "text" text not null,
+  foreign key (product_id) references `product` (id)
+);
+
+create table "tag" (
+  "id" integer not null primary key autoincrement,
+  "product_id" integer not null,
+  "text" text not null,
+  foreign key (product_id) references `product` (id)
 );
 
 create table "order" (
@@ -47,11 +47,18 @@ create table "pricing" (
   foreign key (order_id) references `order` (id)
 );
 
+-- -------
 INSERT INTO "category" (name) VALUES ('kategoria 001');
 INSERT INTO "category" (name) VALUES ('kategoria 002');
+-- -------
 INSERT INTO "product" (name, price, description, category) VALUES ('produkt 001', 12.72, 'Opis produktu 001', 1);
 INSERT INTO "product" (name, price, description, category) VALUES ('produkt 002', 00.99, 'Opis produktu 002', 1);
 INSERT INTO "product" (name, price, description, category) VALUES ('produkt 003', 102.4287255, 'Opis produktu 003', 2);
+-- -------
+INSERT INTO "tag" ("product_id", "text") VALUES (1, 'szybki'), (1, 'czerwony'), (1, 'szerszeń');
+INSERT INTO "tag" ("product_id", "text") VALUES (2, 'brzydki'), (2, 'zły'), (2, 'szczery');
+-- -------
+INSERT INTO "opinion" ("product_id", "text") VALUES (2, 'Uwielbiam ten produkt'), (2, 'Jest najlepszy'), (2, 'Jest najgorszy');
 # --- !Downs
 
 drop table if exists "product" ;
