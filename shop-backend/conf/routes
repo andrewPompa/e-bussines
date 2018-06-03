@@ -3,12 +3,14 @@
 # ~~~~
 
 # Home page
+GET         /auth                       controllers.GoogleOAuthController.onAuthResponse
+
 GET         /products                   controllers.ProductsController.getProducts
 POST        /products                   controllers.ProductsController.addProduct
 GET         /products/:productId        controllers.ProductsController.getProduct(productId: Long)
 
-GET         /opinion/:productId         controllers.OpinionController.getOpinionOfProductId(productId: Long)
 GET         /opinion                    controllers.OpinionController.getAll
+GET         /opinion/:productId         controllers.OpinionController.getOpinionOfProductId(productId: Long)
 POST        /opinion/:productId         controllers.OpinionController.addOpinion(productId: Long)
 
 POST        /order                      controllers.OrderController.addOrder
