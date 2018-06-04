@@ -4,6 +4,8 @@
 
 # Home page
 GET         /auth                       controllers.GoogleOAuthController.onAuthResponse
+GET         /auth/github                controllers.GithubOAuthController.onAuthResponse
+GET         /login/github               controllers.GithubOAuthController.onGithubLogin
 
 GET         /products                   controllers.ProductsController.getProducts
 POST        /products                   controllers.ProductsController.addProduct

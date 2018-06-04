@@ -1,5 +1,5 @@
 package models
 
-case class GoogleUserResponse(name: String, familyName: String, email: String, locale: String) {
+case class OAuthUser(name: String, familyName: String, email: String, locale: String, accessToken: String) {
 
 }

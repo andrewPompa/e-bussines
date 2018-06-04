@@ -1,7 +1,7 @@
 package services
 
 import javax.inject.Inject
-import models.{GoogleAuthResponse, GoogleUserResponse}
+import models.{GoogleAuthResponse, GoogleUser}
 import play.api.libs.ws._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -64,7 +64,7 @@ class GoogleAuthService @Inject()(ws: WSClient,
         )
     }
 
-    def getUser(googleAuthResponse: GoogleAuthResponse): Future[GoogleUserResponse] = {
+    def getUser(googleAuthResponse: GoogleAuthResponse): Future[GoogleUser] = {
         ws.url(USER_INFORMATION_API_URL)
             .withHttpHeaders(("Authorization", "Bearer " + googleAuthResponse.accessToken))
             .get()
@@ -87,7 +87,7 @@ class GoogleAuthService @Inject()(ws: WSClient,
 
     private def getOAuthUser(response: WSResponse) = {
         val json = response.json
-        GoogleUserResponse(
+        GoogleUser(
             (json \ USER_NAME_KEY).as[String],
             (json \ USER_FAMILY_NAME_KEY).as[String],
             (json \ USER_EMAIL_KEY).as[String],
