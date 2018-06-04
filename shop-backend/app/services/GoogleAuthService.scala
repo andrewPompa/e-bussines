@@ -1,7 +1,7 @@
 package services
 
 import javax.inject.Inject
-import models.{GoogleAuthResponse, GoogleUser}
+import models.google.{GoogleAuthResponse, GoogleUser}
 import play.api.libs.ws._
 
 import scala.concurrent.{ExecutionContext, Future}

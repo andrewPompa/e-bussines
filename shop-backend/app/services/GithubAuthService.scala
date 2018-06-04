@@ -1,8 +1,8 @@
 package services
 
 import javax.inject.{Inject, Singleton}
-import models.github.GithubEmailApiResponse
-import models.{BasketItem, GithubAuthResponse, OAuthUser}
+import models.github.{GithubAuthResponse, GithubEmailApiResponse}
+import models.{BasketItem, OAuthUser}
 import play.api.libs.json.{JsPath, Reads}
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.libs.functional.syntax._
