@@ -1,7 +1,9 @@
-package filters
+package security
+
 import javax.inject._
 import play.api._
 import play.api.http.HttpFilters
+import play.api.mvc.EssentialFilter
 import play.filters.cors._
 
 /**
@@ -18,12 +20,13 @@ import play.filters.cors._
   * each response.
   */
 @Singleton
-class Filters @Inject() (
+class CorsInterceptor @Inject()(
                           env: Environment,
+                          authorizationInterceptor: AuthorizationInterceptor,
                           corsFilter: CORSFilter) extends HttpFilters {
 
-  override val filters: Seq[CORSFilter] = {
-    Seq(corsFilter)
+  override val filters: Seq[EssentialFilter] = {
+    Seq(corsFilter, authorizationInterceptor)
   }
 
 

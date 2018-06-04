@@ -2,19 +2,19 @@ package controllers
 
 import javax.inject.Inject
 import models._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsString, Json}
 import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents}
+import repositories.ProductRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class ProductsController @Inject()(productsRepository: ProductRepository,
-                                   opinionRepository: OpinionRepository,
                                    cc: MessagesControllerComponents)
                                   (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
     def getProducts: Action[AnyContent] = Action.async {
         println("executing request")
         productsRepository.list().map { products =>
-            Ok("test")
+            Ok(Json.toJson(products))
         }
     }
 
@@ -37,7 +37,8 @@ class ProductsController @Inject()(productsRepository: ProductRepository,
 
     def addProduct: Action[AnyContent] = Action { implicit request =>
         val json = request.body.asJson.get
-        println(json)
+        val text = json("text").as[String]
+        println(text)
         Ok("Jim")
     }
 }

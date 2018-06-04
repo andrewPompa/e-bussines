@@ -40,7 +40,8 @@ export class Product extends React.Component {
         const id = props.match.params.id;
         props.loadProduct(id);
         this.state = {
-            newOpinion: ''
+            newOpinion: '',
+            key: Math.random()
         };
     }
 
@@ -72,7 +73,7 @@ export class Product extends React.Component {
                 })}
                 <ListItem>
                     <TextField
-                        key='opinion_text_field'
+                        key={`opinion_text_field${this.state.key}`}
                         value={this.state.newOpinion}
                         onChange={e => this.updateInputValue(e)}
                         label="Napisz coś o tym produkcie"
@@ -95,7 +96,10 @@ export class Product extends React.Component {
     }
 
     onAddOpinionButtonClick() {
-        this.props.addNewOpinion(this.state.newOpinion);
+        this.props.addNewOpinion(this.props.product.id, this.state.newOpinion);
+        this.state.newOpinion = '';
+        this.state.key = Math.random();
+        this.setState({state: Math.random()})
     }
 }
 
@@ -106,7 +110,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         loadProduct: (id) => dispatch(loadProduct(id)),
-        addNewOpinion: (text) => dispatch(addOpinion(text)),
+        addNewOpinion: (id, text) => dispatch(addOpinion(id, text)),
         addProduct: (product) => dispatch(addProductToBasket(product))
     }
 };
