@@ -43,11 +43,15 @@ class AuthorizationInterceptor @Inject()(val mat: Materializer, router: Router, 
     private def getUser(header: RequestHeader): Future[Option[User]] = {
         val userEmailOption = header.session.get("user")
         val googleTokenOption = header.session.get("googleToken")
+        val githubTokenOption = header.session.get("githubToken")
         if (userEmailOption.isEmpty) {
             return Future { Option.empty }
         }
         if (googleTokenOption.isDefined) {
-            return authenticationService.checkUser(userEmailOption.get.toString, googleTokenOption.get.toString)
+            return authenticationService.checkGoogleUser(userEmailOption.get.toString, googleTokenOption.get.toString)
+        }
+        if (githubTokenOption.isDefined) {
+            return authenticationService.checkGithubUser(userEmailOption.get.toString, githubTokenOption.get.toString)
         }
         Future { Option.empty }
     }

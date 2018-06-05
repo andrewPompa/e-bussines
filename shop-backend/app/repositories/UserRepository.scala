@@ -40,6 +40,10 @@ class UserRepository  @Inject()(dbConfigProvider: DatabaseConfigProvider)(implic
         user.filter(userToFilter => userToFilter.email === email && userToFilter.googleToken === googleToken ).result.headOption
     }
 
+    def listUserByEmailAndGithubToken(email: String, githubToken: String) = db.run {
+        user.filter(userToFilter => userToFilter.email === email && userToFilter.githubToken === githubToken ).result.headOption
+    }
+
     def updateUser(updateUser: User) = db.run {
         user.update(updateUser)
     }

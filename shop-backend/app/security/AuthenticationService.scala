@@ -4,10 +4,8 @@ import java.sql.Timestamp
 import java.util.{Calendar, Date}
 
 import javax.inject.Inject
-import javax.xml.ws.Response
 import models.user.{User, UserRole}
 import org.joda.time.DateTime
-import play.api.mvc.Result
 import repositories.UserRepository
 import services.OAuthConfigurationService
 
@@ -36,8 +34,27 @@ class AuthenticationService @Inject()(userRepository: UserRepository,
             }
         }
     }
+    def addGithubUser(email: String, token: String, role: Int): Future[User] = {
+        val githubToken = Encryption.encrypt(oAuthConfigurationService.APP_KEY, token)
+        userRepository.listUserByEmail(email).flatMap { userOption =>
+            if (userOption.isDefined) {
+                val user = userOption.get
+                val userToUpdate = User(user.id, user.email, user.role, user.googleToken, user.googleTokenExpiryDate, Option(githubToken), Option(getTokenExpiry))
+                userRepository.updateUser(userToUpdate)
+                Future {
+                    userToUpdate
+                }
+            } else {
+                val newUser = User(-1, email, UserRole.User, Option.empty, Option.empty, Option(githubToken), Option(getTokenExpiry))
+                userRepository.addNewUser(newUser)
+                Future {
+                    newUser
+                }
+            }
+        }
+    }
 
-    def checkUser(user: String, googleToken: String): Future[Option[User]] = {
+    def checkGoogleUser(user: String, googleToken: String): Future[Option[User]] = {
         userRepository.listUserByEmailAndGoogleToken(user, googleToken).map { userOption =>
             if (userOption.isEmpty) {
                 Option.empty[User]
@@ -55,15 +72,34 @@ class AuthenticationService @Inject()(userRepository: UserRepository,
         }
     }
 
+    def checkGithubUser(user: String, githubToken: String): Future[Option[User]] = {
+        userRepository.listUserByEmailAndGithubToken(user, githubToken).map { userOption =>
+            if (userOption.isEmpty) {
+                Option.empty[User]
+            } else {
+                val user = userOption.get
+
+                if (isTokenExpired(user.githubTokenExpiryDate.get)) {
+                    Option.empty[User]
+                } else {
+                    val userToUpdate = User(user.id, user.email, user.role, user.googleToken, user.googleTokenExpiryDate, Option(githubToken), Option(getTokenExpiry))
+                    userRepository.updateUser(userToUpdate)
+                    Option(userToUpdate)
+                }
+            }
+        }
+    }
+
     private def isTokenExpired(expiry: Timestamp): Boolean = {
         val whenTokenExpiring = Calendar.getInstance()
         whenTokenExpiring.setTime(new Date(expiry.getTime))
+        whenTokenExpiring.add(Calendar.SECOND, oAuthConfigurationService.APP_TOKEN_VALIDITY_TIME)
         val now = Calendar.getInstance()
         whenTokenExpiring.before(now)
     }
 
     private def getTokenExpiry = {
-        new Timestamp(DateTime.now.plusSeconds(oAuthConfigurationService.APP_TOKEN_VALIDITY_TIME).toDate.getTime)
+        new Timestamp(Calendar.getInstance().getTimeInMillis)
     }
 
 }
