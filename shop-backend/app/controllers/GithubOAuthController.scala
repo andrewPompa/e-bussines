@@ -1,9 +1,9 @@
 package controllers
 
 import javax.inject._
-import models.ProductRepository
 import play.api.libs.json._
 import play.api.mvc._
+import repositories.ProductRepository
 import services.{GithubAuthService, GoogleAuthService}
 
 import scala.concurrent.{ExecutionContext, Future}

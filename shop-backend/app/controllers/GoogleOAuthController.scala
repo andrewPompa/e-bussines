@@ -1,9 +1,9 @@
 package controllers
 
 import javax.inject._
-import models.ProductRepository
 import play.api.libs.json._
 import play.api.mvc._
+import repositories.ProductRepository
 import services.GoogleAuthService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,5 +32,9 @@ class GoogleOAuthController @Inject()(productRepository: ProductRepository,
                 }
             }
         }
+    }
+
+    def onGoogleLogin: Action[AnyContent] = Action { implicit request =>
+        Redirect(googleAuthService.GOOGLE_AUTH_URL, googleAuthService.buildParamsToAuthUrl)
     }
 }

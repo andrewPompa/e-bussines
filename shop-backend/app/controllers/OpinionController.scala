@@ -1,9 +1,9 @@
 package controllers
 
 import javax.inject.Inject
-import models.{ProductRepository}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents}
+import repositories.ProductRepository
 
 import scala.concurrent.ExecutionContext
 

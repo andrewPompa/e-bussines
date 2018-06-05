@@ -9,6 +9,15 @@ import scala.concurrent.{ExecutionContext, Future}
 class GoogleAuthService @Inject()(ws: WSClient,
                                   oAuthConfigurationService: OAuthConfigurationService)
                                  (implicit ec: ExecutionContext) {
+    val GOOGLE_AUTH_URL: String = "https://accounts.google.com/o/oauth2/v2/auth"
+    private val AUTH_URL_SCOPE_KEY = "scope"
+    private val AUTH_URL_ACCESS_TYPE_KEY = "access_type"
+    private val AUTH_URL_INCLUDE_GRANTED_SCOPES_KEY = "include_granted_scopes"
+    private val AUTH_URL_STATE_KEY = "state"
+    private val AUTH_URL_REDIRECT_URI_KEY = "redirect_uri"
+    private val AUTH_URL_RESPONSE_TYPE_KEY = "response_type"
+    private val AUTH_URL_CLIENT_ID_KEY = "client_id"
+
     private val STATE_QUERY_PARAMS_KEY = "state"
     private val CODE_QUERY_PARAMS_KEY = "code"
     private val STATE_QUERY_PARAMS_VALID_VALUE = "state_parameter_passthrough_value"
@@ -22,6 +31,21 @@ class GoogleAuthService @Inject()(ws: WSClient,
     private val USER_NAME_KEY = "name"
     private val USER_LOCALE_KEY = "locale"
     private val USER_EMAIL_KEY = "email"
+
+    //    state=&redirect_uri=http://localhost:9090/auth&response_type=&client_id=171845504489-24c8j692bbpb45ph62b10dtfbnsr5kq7.apps.googleusercontent.com
+//http://localhost:9090/login/google
+
+    def buildParamsToAuthUrl: Map[String, Seq[String]] = {
+        Map(
+            AUTH_URL_SCOPE_KEY -> Seq(oAuthConfigurationService.GOOGLE_ACCESS_SCOPE),
+            AUTH_URL_ACCESS_TYPE_KEY -> Seq("online"),
+            AUTH_URL_INCLUDE_GRANTED_SCOPES_KEY -> Seq("true"),
+            AUTH_URL_STATE_KEY -> Seq("state_parameter_passthrough_value"),
+            AUTH_URL_REDIRECT_URI_KEY -> Seq(oAuthConfigurationService.GOOGLE_REDIRECT_ENDPOINT),
+            AUTH_URL_RESPONSE_TYPE_KEY -> Seq("code"),
+            AUTH_URL_CLIENT_ID_KEY -> Seq(oAuthConfigurationService.GOOGLE_CLIENT_ID)
+        )
+    }
 
     def isRedirectAuthStringValid(params: Map[String, Seq[String]]): Boolean = {
         if (params.size != 3) {

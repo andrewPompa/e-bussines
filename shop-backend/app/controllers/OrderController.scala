@@ -5,6 +5,7 @@ import models._
 import play.api.libs.json.{JsPath, Json, Reads}
 import play.api.libs.functional.syntax._
 import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents}
+import repositories.ProductRepository
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext

@@ -16,6 +16,8 @@ libraryDependencies ++= Seq(
   filters,
   ws
 )
+libraryDependencies += "org.apache.commons" % "commons-compress" % "1.14"
+
 //libraryDependencies += "slick.driver.SQLiteDriver" %%
 
 //libraryDependencies += "com.h2database" % "h2" % "1.4.196"
