@@ -32,7 +32,6 @@ class GoogleAuthService @Inject()(ws: WSClient,
     private val USER_LOCALE_KEY = "locale"
     private val USER_EMAIL_KEY = "email"
 
-    //    state=&redirect_uri=http://localhost:9090/auth&response_type=&client_id=171845504489-24c8j692bbpb45ph62b10dtfbnsr5kq7.apps.googleusercontent.com
 //http://localhost:9090/login/google
 
     def buildParamsToAuthUrl: Map[String, Seq[String]] = {

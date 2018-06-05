@@ -147,7 +147,7 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
         }
     }
 
-    def addOpinion(productId: Long, text: String) = {
+    def addOpinion(productId: Long, text: String): Future[Int] = {
         val opinionId =
             (opinion returning opinion.map(_.id)) += Opinion(-1, productId, text)
         db.run {

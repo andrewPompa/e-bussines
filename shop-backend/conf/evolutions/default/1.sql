@@ -7,6 +7,7 @@ drop table if exists "pricing";
 drop table if exists "tag";
 drop table if exists "order";
 drop table if exists "order_product";
+drop table if exists "user";
 
 create table "product" (
   id          integer not null primary key autoincrement,
@@ -48,6 +49,16 @@ create table "order_product" (
   quantity   integer not null,
   foreign key (order_id) references `order` (id),
   foreign key (product_id) references `product` (id)
+);
+
+create table "user" (
+  id                       integer        not null primary key autoincrement,
+  email                    varchar2(5000) not null unique,
+  role                     integer        not null,
+  google_token             text,
+  google_token_expiry_date timestamp,
+  github_token             text,
+  github_token_expiry_date timestamp
 );
 
 -- -------
