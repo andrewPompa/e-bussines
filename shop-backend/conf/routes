@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET         /auth                       controllers.GoogleOAuthController.onAuthResponse
+GET         /auth/google                      controllers.GoogleOAuthController.onAuthResponse
 GET         /login/google               controllers.GoogleOAuthController.onGoogleLogin
 GET         /auth/github                controllers.GithubOAuthController.onAuthResponse
 GET         /login/github               controllers.GithubOAuthController.onGithubLogin

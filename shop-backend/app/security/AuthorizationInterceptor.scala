@@ -35,7 +35,7 @@ class AuthorizationInterceptor @Inject()(val mat: Materializer, ec: ExecutionCon
     }
     private def isAuthorized(header: RequestHeader): Boolean = {
         // todo: dokończyć ten szajs
-        header.session("user")
+//        header.session("user")
         true
     }
 }

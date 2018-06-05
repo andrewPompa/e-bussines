@@ -33,7 +33,8 @@ class GoogleOAuthController @Inject()(productRepository: ProductRepository,
             }
         }
     }
+
     def onGoogleLogin: Action[AnyContent] = Action { implicit request =>
-        Redirect("https://google.com")
+        Redirect(googleAuthService.GOOGLE_AUTH_URL, googleAuthService.buildParamsToAuthUrl)
     }
 }
