@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
 import {
     decrementQuantityOfProduct,
-    incrementQuantityOfProduct,
+    incrementQuantityOfProduct, orderProducts,
     removeProductFromBasket
 } from "../../store/actions/basketActions";
 
@@ -47,7 +47,7 @@ const styles = theme => {
 
 export class Basket extends React.Component {
     render() {
-        const {basketItems, classes, removeProduct, incrementQuantity, decrementQuantity} = this.props;
+        const {basketItems, classes, removeProduct, incrementQuantity, decrementQuantity, orderProducts} = this.props;
         return <div className={classes.basket}>
             <List>
                 {basketItems.map(basketItem => (
@@ -66,7 +66,7 @@ export class Basket extends React.Component {
                     </ListItem>
                 ))}
             </List>
-            <Button className={classes.orderButton} size="large">Zamów <FlightTakeoff color={"secondary"}/></Button>
+            <Button className={classes.orderButton} onClick={() => orderProducts(basketItems)} size="large">Zamów <FlightTakeoff color={"secondary"}/></Button>
         </div>;
     }
 }
@@ -82,7 +82,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         removeProduct: (id) => dispatch(removeProductFromBasket(id)),
         incrementQuantity: (id) => dispatch(incrementQuantityOfProduct(id)),
-        decrementQuantity: (id) => dispatch(decrementQuantityOfProduct(id))
+        decrementQuantity: (id) => dispatch(decrementQuantityOfProduct(id)),
+        orderProducts: (basketItems) => dispatch(orderProducts(basketItems))
     }
 };
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Basket));
