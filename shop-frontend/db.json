@@ -1,0 +1,36 @@
+{
+  "products": [
+    {
+      "id": 0,
+      "name": "Produkt 1",
+      "description": "Opis 1",
+      "price": 21.12,
+      "tags": [
+        {"id": 0, "text": "ładny"},
+        {"id": 1, "text": "szybki"},
+        {"id": 2, "text": "czerwony"}
+      ],
+      "opinions": [
+        {"id": 0, "text": "Uwielbiam ten produkt"},
+        {"id": 1, "text": "Jest najlepszy"},
+        {"id": 2, "text": "Jest najgorszy"}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Produkt 2",
+      "description": "Opis 2",
+      "price": 41.12,
+      "tags": [],
+      "opinions": []
+    },
+    {
+      "id": 2,
+      "name": "Produkt 3",
+      "description": "Opis 3",
+      "price": 17.43,
+      "tags": [],
+      "opinions": []
+    }
+  ]
+}
