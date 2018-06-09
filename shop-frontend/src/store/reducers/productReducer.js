@@ -19,7 +19,7 @@ const productReducer = (state = initialState, action) => {
         case productAction.PRODUCT_LOADING:
             return {...state, loading: true};
         case productAction.PRODUCT_LOADED:
-            // console.log(action.payload);
+            console.log(action.payload);
             return {data: action.payload, loading: false};
         case productAction.PRODUCT_OPINION_INSERTING:
             state.newOpinion = action.payload;

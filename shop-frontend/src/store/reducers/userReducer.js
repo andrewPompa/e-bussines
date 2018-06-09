@@ -1,7 +1,7 @@
 const initialState = {
     user: '',
     id: '',
-    isAdmin: false,
+    isAdmin: true,
     isAuthenticated: true
 };
 const userReducer = (state = initialState, action) => {

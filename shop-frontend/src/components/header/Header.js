@@ -52,7 +52,7 @@ class Header extends Component {
     }
 
     render() {
-        const {classes, user} = this.props;
+        const {classes} = this.props;
 
         if (this.state.redirectToGithubLogin === true) {
             window.location.replace('http//:localhost:9090/github');
@@ -122,7 +122,7 @@ class Header extends Component {
             return;
         }
         return (
-            <Link className={this.props.classes.link} to='/sample'>
+            <Link className={this.props.classes.link} to='/products-management'>
                 <Button className={this.props.classes.linkButton}>
                     Zarządzaj produktami
                 </Button>

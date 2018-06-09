@@ -1,3 +1,5 @@
+import {API_URL} from "../../AppConstans";
+
 export const PRODUCT_LOADING = "[PRODUCT] PRODUCT_LOADING";
 export const PRODUCT_LOADED = "[PRODUCT] PRODUCT_LOADED";
 export const PRODUCT_OPINION_INSERTING = "[PRODUCT] PRODUCT_OPINION_INSERTING";
@@ -31,7 +33,7 @@ export function productOpinionInserted(opinion) {
 export const loadProduct = (id) => (
     (dispatch) => {
         (productLoading());
-        fetch(`http://localhost:9090/products/${id}`)
+        fetch(`${API_URL}/products/${id}`)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -46,7 +48,7 @@ export const loadProduct = (id) => (
 export const addOpinion = (productId, text) => (
     (dispatch) => {
         dispatch(productOpinionInserting(text));
-        fetch(`http://localhost:9090/opinion/${productId}`, {
+        fetch(`${API_URL}/opinion/${productId}`, {
             body: JSON.stringify({'text': text}),
             cache: 'no-cache',
             headers: {

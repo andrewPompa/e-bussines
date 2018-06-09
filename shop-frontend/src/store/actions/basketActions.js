@@ -1,5 +1,3 @@
-import {loadProduct, productLoaded, productLoading} from "./productActions";
-
 export const ADD_PRODUCT_TO_BASKET = '[BASKET] ADD_PRODUCT_TO_BASKET';
 export const REMOVE_PRODUCT_FROM_BASKET = '[BASKET] REMOVE_PRODUCT_FROM_BASKET';
 export const INCREMENT_QUANTITY_OF_PRODUCT = '[BASKET] INCREMENT_QUANTITY_OF_PRODUCT';

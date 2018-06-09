@@ -97,9 +97,7 @@ export class Product extends React.Component {
 
     onAddOpinionButtonClick() {
         this.props.addNewOpinion(this.props.product.id, this.state.newOpinion);
-        this.state.newOpinion = '';
-        this.state.key = Math.random();
-        this.setState({state: Math.random()})
+        this.setState({newOpinion: '', key: Math.random()})
     }
 }
 
