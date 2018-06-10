@@ -12,8 +12,16 @@ import TextField from '@material-ui/core/TextField';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
 import {addProductToBasket} from "../../store/actions/basketActions";
-import {addOpinion, loadProduct} from "../../store/actions/productActions";
+import {
+    addOpinion,
+    loadProduct,
+    productAddTag,
+    productRemoveOpinion,
+    productRemoveTag
+} from "../../store/actions/productActions";
 import Button from "@material-ui/core/es/Button/Button";
+import Save from '@material-ui/icons/Save';
+import IconButton from '@material-ui/core/IconButton';
 
 const styles = theme => ({
     root: {
@@ -34,6 +42,15 @@ const styles = theme => ({
     },
     margin: {
         margin: theme.spacing.unit,
+    },
+    saveButton: {
+        width: "100%",
+        textAlign: "center"
+    },
+    button: {
+        fontSize: 30,
+        backgroundColor: "#41c300",
+        margin: theme.spacing.unit
     }
 });
 
@@ -45,6 +62,8 @@ export class ProductManagement extends React.Component {
         this.state = {
             name: '',
             price: 0.0,
+            key: 0,
+            newTagText: '',
             tags: []
         }
     }
@@ -53,8 +72,8 @@ export class ProductManagement extends React.Component {
         this.setState({
             name: props.product.name,
             price: props.product.price,
+            key: Math.random(),
             description: props.product.description,
-            tags: props.product.tags
         });
     }
 
@@ -66,6 +85,23 @@ export class ProductManagement extends React.Component {
 
     handleTagInputChange(e) {
 
+    }
+
+    onRemoveTagButtonClicked(tag) {
+        this.props.removeTag(tag);
+        this.setState({key: Math.random()});
+    }
+
+    onRemoveOpinionButtonClicked(opinion) {
+        this.props.removeOpinion(opinion);
+        this.setState({key: Math.random()});
+    }
+    onAddNewTagButtonClicked(tagText) {
+        if (!tagText || tagText === '') {
+            return;
+        }
+        this.props.addTag(tagText);
+        this.setState({newTagText: '', key: Math.random()});
     }
 
     render() {
@@ -126,17 +162,23 @@ export class ProductManagement extends React.Component {
                                 }}
                                 margin="normal"
                             />
-                            <Button mini variant={"fab"} className={classes.margin}><DeleteForeverIcon/></Button>
+                            <Button mini variant={"fab"} className={classes.margin} onClick={e => this.onRemoveTagButtonClicked(tag)}>
+                                <DeleteForeverIcon/>
+                            </Button>
                         </ListItem>
                     )
                 })}
                 <ListItem key={'tag_new'} className={classes.listItem}>
                     <TextField
-                        name={'tag_name'}
+                        name={'newTagText'}
+                        value={this.state.newTagText || ''}
+                        onChange={e => this.handleInputChange(e)}
                         helperText="Wstaw nowy tag produktu"
                         margin="normal"
                     />
-                    <Button mini variant={"fab"} className={classes.margin}><AddIcon/></Button>
+                    <Button mini variant={"fab"} className={classes.margin} onClick={() => this.onAddNewTagButtonClicked(this.state.newTagText)}>
+                        <AddIcon/>
+                    </Button>
                 </ListItem>
             </List>
 
@@ -147,11 +189,19 @@ export class ProductManagement extends React.Component {
                             <Typography variant="subheading" color="inherit">
                                 {opinion.text}
                             </Typography>
-                            <Button mini variant={"fab"} className={classes.margin}><DeleteForeverIcon/></Button>
+                            <Button mini variant={"fab"} className={classes.margin} onClick={() => this.onRemoveOpinionButtonClicked(opinion)}>
+                                <DeleteForeverIcon/>
+                            </Button>
                         </ListItem>
                     )
                 })}
             </List>
+            <div className={classes.saveButton}>
+                <Button variant={"flat"} size={"large"} className={classes.button}>
+                    <Save />
+                    Zapisz
+                </Button>
+            </div>
         </form>;
     }
 }
@@ -164,7 +214,10 @@ const mapDispatchToProps = (dispatch) => {
     return {
         loadProduct: (id) => dispatch(loadProduct(id)),
         addNewOpinion: (id, text) => dispatch(addOpinion(id, text)),
-        addProduct: (product) => dispatch(addProductToBasket(product))
+        addProduct: (product) => dispatch(addProductToBasket(product)),
+        addTag: (tag) => dispatch(productAddTag(tag)),
+        removeTag: (tag) => dispatch(productRemoveTag(tag)),
+        removeOpinion: (opinion) => dispatch(productRemoveOpinion(opinion))
     }
 };
 

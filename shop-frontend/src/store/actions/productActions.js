@@ -2,8 +2,11 @@ import {API_URL} from "../../AppConstans";
 
 export const PRODUCT_LOADING = "[PRODUCT] PRODUCT_LOADING";
 export const PRODUCT_LOADED = "[PRODUCT] PRODUCT_LOADED";
+export const PRODUCT_ADD_TAG = "[PRODUCT] PRODUCT_ADD_TAG";
 export const PRODUCT_OPINION_INSERTING = "[PRODUCT] PRODUCT_OPINION_INSERTING";
 export const PRODUCT_OPINION_INSERTED = "[PRODUCT] PRODUCT_OPINION_INSERTED";
+export const PRODUCT_REMOVE_TAG = "[PRODUCT] PRODUCT_REMOVE_TAG";
+export const PRODUCT_REMOVE_OPINION = "[PRODUCT] PRODUCT_REMOVE_OPINION";
 
 export function productLoading() {
     return {type: PRODUCT_LOADING}
@@ -23,9 +26,30 @@ export function productOpinionInserting(newOpinion) {
     }
 }
 
+export function productAddTag(tag) {
+    return {
+        type: PRODUCT_ADD_TAG,
+        payload: tag
+    }
+}
+
 export function productOpinionInserted(opinion) {
     return {
         type: PRODUCT_OPINION_INSERTED,
+        payload: opinion
+    }
+}
+
+export function productRemoveTag(tag) {
+    return {
+        type: PRODUCT_REMOVE_TAG,
+        payload: tag
+    }
+}
+
+export function productRemoveOpinion(opinion) {
+    return {
+        type: PRODUCT_REMOVE_OPINION,
         payload: opinion
     }
 }

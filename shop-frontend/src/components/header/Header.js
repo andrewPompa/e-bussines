@@ -78,7 +78,6 @@ class Header extends Component {
     }
 
     showProductsButtonIfUserLogged() {
-        console.log(this.props.user);
         if (this.props.user.isAuthenticated === false || this.props.user.isAdmin !== false) {
             return;
         }
