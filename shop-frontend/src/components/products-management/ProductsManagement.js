@@ -1,3 +1,4 @@
+import AddIcon from '@material-ui/icons/Add';
 import React, {Component} from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import 'react-select/dist/react-select.css';
@@ -9,6 +10,7 @@ import Typography from "@material-ui/core/es/Typography/Typography";
 import Link from "react-router-dom/es/Link";
 import {connect} from 'react-redux';
 import {getProducts} from "../../store/actions/productsActions";
+import Button from "@material-ui/core/es/Button/Button";
 
 const styles = theme => ({
     root: {
@@ -41,7 +43,7 @@ class Products extends Component {
     };
 
     render() {
-        const {products} = this.props;
+        const {products, classes} = this.props;
 
         const productsList = products.map((product) => {
             return (
@@ -60,6 +62,11 @@ class Products extends Component {
             <div className="Products">
                 <List>
                     {productsList}
+                    <ListItem key="add_new_product">
+                        <Button mini variant={"fab"} className={classes.margin} onClick={() => this.props.history.push('/product-management/new')}>
+                            <AddIcon/>
+                        </Button>
+                    </ListItem>
                 </List>
             </div>
         );

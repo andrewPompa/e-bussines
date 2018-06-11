@@ -1,27 +1,25 @@
 import React from 'react';
 import Typography from "@material-ui/core/es/Typography/Typography";
-import Chip from "@material-ui/core/es/Chip/Chip";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import WorkIcon from '@material-ui/icons/Work';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import {connect} from 'react-redux';
 import {withStyles} from '@material-ui/core/styles';
-import {addProductToBasket} from "../../store/actions/basketActions";
 import {
-    addOpinion,
+    addOpinion, addProduct,
     loadProduct,
     productAddTag,
     productRemoveOpinion,
-    productRemoveTag
+    productRemoveTag,
+    productSetDescription,
+    productSetName,
+    productSetPrice, resetProduct, tagTextChange, updateProduct
 } from "../../store/actions/productActions";
 import Button from "@material-ui/core/es/Button/Button";
 import Save from '@material-ui/icons/Save';
-import IconButton from '@material-ui/core/IconButton';
+import {Redirect} from "react-router-dom";
 
 const styles = theme => ({
     root: {
@@ -36,9 +34,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper
     },
     textField: {
-        marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 500,
+        marginLeft: theme.spacing.unit
     },
     margin: {
         margin: theme.spacing.unit,
@@ -58,23 +54,21 @@ export class ProductManagement extends React.Component {
     constructor(props) {
         super(props);
         const id = props.match.params.id;
-        props.loadProduct(id);
         this.state = {
-            name: '',
-            price: 0.0,
             key: 0,
             newTagText: '',
-            tags: []
+            formValid: false,
+            isNew: true
+        };
+        if (id !== 'new') {
+            this.state.isNew = false;
+            props.loadProduct(id);
         }
+        this.state.formValid = this.isFormValid();
     }
 
     componentWillReceiveProps(props) {
-        this.setState({
-            name: props.product.name,
-            price: props.product.price,
-            key: Math.random(),
-            description: props.product.description,
-        });
+        this.checkFormValidity();
     }
 
     handleInputChange(e) {
@@ -83,8 +77,37 @@ export class ProductManagement extends React.Component {
         });
     }
 
-    handleTagInputChange(e) {
+    setName(e) {
+        this.props.setName(e.target.value);
+        this.setState({key: Math.random()});
+        this.checkFormValidity();
+    }
 
+    setPrice(e) {
+        this.props.setPrice(e.target.value);
+        this.setState({key: Math.random()});
+        this.checkFormValidity();
+    }
+
+    setDescription(e) {
+        this.props.setDescription(e.target.value);
+        this.setState({key: Math.random()});
+        this.checkFormValidity();
+    }
+
+    checkFormValidity() {
+        this.setState({formValid: this.isFormValid()});
+    }
+
+    isFormValid() {
+        const isProductSet = this.props.product !== undefined;
+        if (!isProductSet) {
+            return false;
+        }
+        const isNameSet = this.props.product.name && this.props.product.name !== '';
+        const isPriceSet = this.props.product.price && this.props.product.price !== '';
+        const isDescriptionSet = this.props.product.description && this.props.product.description !== '';
+        return (isNameSet && isPriceSet && isDescriptionSet);
     }
 
     onRemoveTagButtonClicked(tag) {
@@ -96,6 +119,12 @@ export class ProductManagement extends React.Component {
         this.props.removeOpinion(opinion);
         this.setState({key: Math.random()});
     }
+
+    onTagChange(e, tag) {
+        this.props.tagTextChange(tag, e.target.value);
+        this.setState({key: Math.random()});
+    }
+
     onAddNewTagButtonClicked(tagText) {
         if (!tagText || tagText === '') {
             return;
@@ -103,19 +132,35 @@ export class ProductManagement extends React.Component {
         this.props.addTag(tagText);
         this.setState({newTagText: '', key: Math.random()});
     }
+    onClickSaveButton() {
+        console.log('saving');
+        this.setState({formValid: false});
+        if (this.state.isNew === true) {
+            this.props.addProduct(this.props.product);
+        } else {
+            this.props.updateProduct();
+        }
+    }
 
     render() {
-        const {product, classes} = this.props;
-        if (product === undefined) {
-            return '<div>Cannot load content</div>'
+        const {product, classes, isAdded, isUpdated, resetProduct, tagTextChange} = this.props;
+        if (product === undefined || !product) {
+            return <Typography variant="subheading" color="inherit">
+                Product does not exists
+            </Typography>;
         }
+        if (isUpdated === true || isAdded === true) {
+            resetProduct();
+            return <Redirect to="/products-management"/>;
+        }
+        this.state.formValid = this.isFormValid();
         return <form className={classes.root}>
             <TextField
                 className={classes.margin}
                 name="name"
                 label="Nazwa"
-                value={this.state.name}
-                onChange={e => this.handleInputChange(e)}
+                value={product.name || ''}
+                onChange={e => this.setName(e)}
                 InputLabelProps={{
                     shrink: true,
                 }}
@@ -126,8 +171,8 @@ export class ProductManagement extends React.Component {
                 className={classes.margin}
                 name="price"
                 label="Cena"
-                value={this.state.price}
-                onChange={e => this.handleInputChange(e)}
+                value={product.price || ''}
+                onChange={e => this.setPrice(e)}
                 InputLabelProps={{
                     shrink: true,
                 }}
@@ -136,11 +181,11 @@ export class ProductManagement extends React.Component {
                 margin="normal"
             />
             <TextField
-                className={classes.margin}
+                className={classes.textField}
                 name="description"
                 label="Opis"
-                value={this.state.description}
-                onChange={e => this.handleInputChange(e)}
+                value={product.description || ''}
+                onChange={e => this.setDescription(e)}
                 InputLabelProps={{
                     shrink: true,
                 }}
@@ -156,13 +201,14 @@ export class ProductManagement extends React.Component {
                             <TextField
                                 name={`tag_${tag.id}`}
                                 value={tag.text}
-                                onChange={e => this.handleTagInputChange(e)}
+                                onChange={e => this.onTagChange(e, tag)}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
                                 margin="normal"
                             />
-                            <Button mini variant={"fab"} className={classes.margin} onClick={e => this.onRemoveTagButtonClicked(tag)}>
+                            <Button mini variant={"fab"} className={classes.margin}
+                                    onClick={e => this.onRemoveTagButtonClicked(tag)}>
                                 <DeleteForeverIcon/>
                             </Button>
                         </ListItem>
@@ -176,7 +222,8 @@ export class ProductManagement extends React.Component {
                         helperText="Wstaw nowy tag produktu"
                         margin="normal"
                     />
-                    <Button mini variant={"fab"} className={classes.margin} onClick={() => this.onAddNewTagButtonClicked(this.state.newTagText)}>
+                    <Button mini variant={"fab"} className={classes.margin}
+                            onClick={() => this.onAddNewTagButtonClicked(this.state.newTagText)}>
                         <AddIcon/>
                     </Button>
                 </ListItem>
@@ -189,7 +236,8 @@ export class ProductManagement extends React.Component {
                             <Typography variant="subheading" color="inherit">
                                 {opinion.text}
                             </Typography>
-                            <Button mini variant={"fab"} className={classes.margin} onClick={() => this.onRemoveOpinionButtonClicked(opinion)}>
+                            <Button mini variant={"fab"} className={classes.margin}
+                                    onClick={() => this.onRemoveOpinionButtonClicked(opinion)}>
                                 <DeleteForeverIcon/>
                             </Button>
                         </ListItem>
@@ -197,9 +245,8 @@ export class ProductManagement extends React.Component {
                 })}
             </List>
             <div className={classes.saveButton}>
-                <Button variant={"flat"} size={"large"} className={classes.button}>
-                    <Save />
-                    Zapisz
+                <Button variant={"flat"} size={"large"} className={classes.button} disabled={!this.state.formValid} onClick={() => this.onClickSaveButton()}>
+                    <Save/>Zapisz
                 </Button>
             </div>
         </form>;
@@ -207,17 +254,27 @@ export class ProductManagement extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-    return {product: state.product.data};
+    return {
+        product: state.product.data,
+        isUpdated: state.product.isUpdated,
+        isAdded: state.product.isAdded
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        setName: (name) => dispatch(productSetName(name)),
+        setPrice: (price) => dispatch(productSetPrice(price)),
+        setDescription: (description) => dispatch(productSetDescription(description)),
         loadProduct: (id) => dispatch(loadProduct(id)),
         addNewOpinion: (id, text) => dispatch(addOpinion(id, text)),
-        addProduct: (product) => dispatch(addProductToBasket(product)),
         addTag: (tag) => dispatch(productAddTag(tag)),
         removeTag: (tag) => dispatch(productRemoveTag(tag)),
-        removeOpinion: (opinion) => dispatch(productRemoveOpinion(opinion))
+        removeOpinion: (opinion) => dispatch(productRemoveOpinion(opinion)),
+        updateProduct: () => dispatch(updateProduct()),
+        addProduct: (product) => dispatch(addProduct(product)),
+        resetProduct: () => dispatch(resetProduct()),
+        tagTextChange: (tag, text) => dispatch(tagTextChange(tag, text))
     }
 };
 
