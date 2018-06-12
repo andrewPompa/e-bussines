@@ -104,7 +104,7 @@ class GithubAuthService @Inject()(ws: WSClient,
 
     private def getOAuthUser(response: WSResponse, accessToken: String) = {
         val json = response.json
-        implicit val productsRead: Reads[GithubEmailApiResponse] = (
+        implicit val authUserRead: Reads[GithubEmailApiResponse] = (
             (JsPath \ GITHUB_EMAIL_API_RESPONSE_KEY).read[String] and
                 (JsPath \ GITHUB_PRIMARY_API_RESPONSE_KEY).read[Boolean] and
                 (JsPath \ GITHUB_VERIFIED_API_RESPONSE_KEY).read[Boolean]

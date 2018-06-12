@@ -1,3 +1,4 @@
+import {API_URL} from "../../AppConstans";
 export const PRODUCTS_LOADING = "[PRODUCTS] PRODUCTS_LOADING";
 export const PRODUCTS_LOADED = "[PRODUCTS] PRODUCTS_LOADED";
 
@@ -15,7 +16,7 @@ export function productsLoaded(products) {
 export const getProducts = () => (
     (dispatch) => {
         (productsLoading());
-        fetch('http://localhost:9090/products')
+        fetch(`${API_URL}/products`)
             .then(response => {
                 if (response.ok) {
                     console.log(response);

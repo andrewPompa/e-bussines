@@ -1,23 +1,27 @@
 import * as basketActions from '../actions/basketActions';
-const initialState = [
-    {
-        id: 100,
-        name: 'Produkt 1',
-        price: 25.87,
-        quantity: 2
-    },
-    {
-        id: 101,
-        name: 'Produkt 2',
-        price: 47.21,
-        quantity: 1
-    }
-];
-
+// const initialState = [
+// {
+//     id: 100,
+//     name: 'Produkt 1',
+//     price: 25.87,
+//     quantity: 2
+// },
+// {
+//     id: 101,
+//     name: 'Produkt 2',
+//     price: 47.21,
+//     quantity: 1
+// }
+// ];
+const initialState = [];
 
 const basketReducer = (state = initialState, action) => {
     switch (action.type) {
         case basketActions.ADD_PRODUCT_TO_BASKET:
+            const basketIndex = state.findIndex(basketItem => basketItem.id === action.payload.id);
+            if (basketIndex !== -1) {
+                return state;
+            }
             console.log(action.payload);
             return [
                 ...state,
@@ -53,6 +57,8 @@ const basketReducer = (state = initialState, action) => {
                 return state;
             }
             state.splice(basketItemIndexToRemove, 1);
+            return [...state];
+        case basketActions.ORDER:
             return [...state];
         default:
             return state

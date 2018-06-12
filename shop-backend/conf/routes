@@ -3,13 +3,14 @@
 # ~~~~
 
 # Home page
-GET         /auth/google                      controllers.GoogleOAuthController.onAuthResponse
+GET         /auth/google                controllers.GoogleOAuthController.onAuthResponse
 GET         /login/google               controllers.GoogleOAuthController.onGoogleLogin
 GET         /auth/github                controllers.GithubOAuthController.onAuthResponse
 GET         /login/github               controllers.GithubOAuthController.onGithubLogin
 
 GET         /products                   controllers.ProductsController.getProducts
 POST        /products                   controllers.ProductsController.addProduct
+PUT         /products                   controllers.ProductsController.updateProduct
 GET         /products/:productId        controllers.ProductsController.getProduct(productId: Long)
 
 GET         /opinion                    controllers.OpinionController.getAll
@@ -18,6 +19,7 @@ POST        /opinion/:productId         controllers.OpinionController.addOpinion
 
 POST        /order                      controllers.OrderController.addOrder
 GET         /orders                     controllers.OrderController.getOrders
+GET         /orders/:orderId/finish                      controllers.OrderController.finishOrder(orderId: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path

@@ -5,7 +5,6 @@ import java.util.{Calendar, Date}
 
 import javax.inject.Inject
 import models.user.{User, UserRole}
-import org.joda.time.DateTime
 import repositories.UserRepository
 import services.OAuthConfigurationService
 
