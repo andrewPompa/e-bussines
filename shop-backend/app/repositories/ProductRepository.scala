@@ -1,7 +1,10 @@
 package repositories
 
+import java.sql.Timestamp
+
 import javax.inject.{Inject, Singleton}
 import models._
+import models.user.User
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 
@@ -12,7 +15,7 @@ import scala.language.postfixOps
   * @param dbConfigProvider The Play db config provider. Play will inject this for you.
   */
 @Singleton
-class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, userRepository: UserRepository)(implicit ec: ExecutionContext) {
     val dbConfig = dbConfigProvider.get[JdbcProfile]
 
     import dbConfig._
@@ -84,9 +87,13 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
 
         def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
+        def userId = column[Long]("user_id")
+
         def done = column[Boolean]("done")
 
-        def * = (id, done) <> ((Order.apply _).tupled, Order.unapply)
+        def user_fk = foreignKey("user_fk", userId, user)(_.id)
+
+        def * = (id, userId, done) <> ((Order.apply _).tupled, Order.unapply)
     }
 
     val order = TableQuery[OrderTable]
@@ -110,6 +117,19 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
     }
 
     val productOrder = TableQuery[ProductOrderTable]
+
+    class UserTable(tag: Tag) extends Table[User](tag, "user") {
+        def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+        def email = column[String]("email")
+        def role = column[Int]("role")
+        def googleToken = column[Option[String]]("google_token")
+        def googleTokenExpiryDate = column[Option[Timestamp]]("google_token_expiry_date")
+        def githubToken = column[Option[String]]("github_token")
+        def githubTokenExpiryDate = column[Option[Timestamp]]("github_token_expiry_date")
+
+        def * = (id, email, role, googleToken, googleTokenExpiryDate, githubToken, githubTokenExpiryDate) <> ((User.apply _).tupled, User.unapply)
+    }
+    val user = TableQuery[UserTable]
 
     def create(name: String, description: String, price: Int, category: Int): Future[Product] = db.run {
         (product.map(p => (p.name, p.description, p.price, p.category))
@@ -152,6 +172,20 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
         db.run {
             opinionId
         }
+    }
+    def listOrders(): Future[Seq[Order]] = {
+        db.run {
+            order.result
+        }
+    }
+
+    def listOrder(orderId: Long): Future[Option[Order]] =
+        db.run {
+            order.filter(_.id === orderId).result.headOption
+        }
+
+    def listProductOrdersByOrderId(orderId: Long): Future[Seq[ProductOrder]] = db.run {
+        productOrder.filter(_.orderId === orderId).result
     }
 
     def listAllOrders(): Future[Seq[(Order, ProductOrder, Product)]] = {
@@ -215,6 +249,12 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
             (product returning product.map(_.id)) += Product(-1, fullProduct.name, fullProduct.description, fullProduct.price, 0)
         db.run {
             opinionId
+        }
+    }
+
+    def updateOrder(doneOrder: Order): Future[Int] = {
+        db.run {
+            order.update(doneOrder)
         }
     }
 }

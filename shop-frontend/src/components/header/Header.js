@@ -108,7 +108,7 @@ class Header extends Component {
             return;
         }
         return (
-            <Link className={this.props.classes.link} to='/sample'>
+            <Link className={this.props.classes.link} to='/orders'>
                 <Button className={this.props.classes.linkButton}>
                     Zamówienia
                 </Button>

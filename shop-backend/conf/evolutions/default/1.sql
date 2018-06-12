@@ -39,7 +39,9 @@ create table "tag" (
 
 create table "order" (
   id   integer not null primary key autoincrement,
-  done boolean default false
+  user_id integer not null,
+  done boolean default false,
+  foreign key (user_id) references `user` (id)
 );
 
 create table "order_product" (
@@ -69,13 +71,15 @@ INSERT INTO "product" (name, price, description, category) VALUES ('produkt 001'
 INSERT INTO "product" (name, price, description, category) VALUES ('produkt 002', 00.99, 'Opis produktu 002', 1);
 INSERT INTO "product" (name, price, description, category) VALUES ('produkt 003', 102.4287255, 'Opis produktu 003', 2);
 -- -------
+INSERT INTO "user" (email, role) VALUES ('konto.do.testow123@gmail.com', 2);
+-- -------
 INSERT INTO "tag" ("product_id", "text") VALUES (1, 'szybki'), (1, 'czerwony'), (1, 'szerszeń');
 INSERT INTO "tag" ("product_id", "text") VALUES (2, 'brzydki'), (2, 'zły'), (2, 'szczery');
 -- -------
 INSERT INTO "opinion" ("product_id", "text")
 VALUES (2, 'Uwielbiam ten produkt'), (2, 'Jest najlepszy'), (2, 'Jest najgorszy');
 -- -------
-INSERT INTO "order" ("done") values (0);
+INSERT INTO "order" ("user_id", "done") values (1, 0);
 INSERT INTO "order_product" ("order_id", "product_id", "quantity") values (1, 1, 1);
 INSERT INTO "order_product" ("order_id", "product_id", "quantity") values (1, 2, 3);
 INSERT INTO "order_product" ("order_id", "product_id", "quantity") values (1, 4, 2);

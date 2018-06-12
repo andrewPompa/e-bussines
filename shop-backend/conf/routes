@@ -19,6 +19,7 @@ POST        /opinion/:productId         controllers.OpinionController.addOpinion
 
 POST        /order                      controllers.OrderController.addOrder
 GET         /orders                     controllers.OrderController.getOrders
+GET         /orders/:orderId/finish                      controllers.OrderController.finishOrder(orderId: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path
