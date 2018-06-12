@@ -254,7 +254,23 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, user
 
     def updateOrder(doneOrder: Order): Future[Int] = {
         db.run {
-            order.update(doneOrder)
+            order.filter(_.id === doneOrder.id).update(doneOrder)
         }
+    }
+
+    def insertOrder(newOrder: Order): Future[Long] = {
+        val orderId =
+            (order returning order.map(_.id)) += newOrder
+        db.run {
+            orderId
+        }
+    }
+
+    def insertProductOrders(productOrders: Seq[ProductOrder]): Future[Seq[Int]] =  {
+        val productOrdersToInsert = productOrders.map { order => this.productOrder.insertOrUpdate(order) }
+        val sequence = DBIO.sequence(productOrdersToInsert)
+        db.run (
+            sequence
+        )
     }
 }
