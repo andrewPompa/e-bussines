@@ -21,9 +21,9 @@ import play.filters.cors._
   */
 @Singleton
 class CorsInterceptor @Inject()(
-                          env: Environment,
-                          authorizationInterceptor: AuthorizationInterceptor,
-                          corsFilter: CORSFilter) extends HttpFilters {
+                                   env: Environment,
+                                   authorizationInterceptor: AuthenticationInterceptor,
+                                   corsFilter: CORSFilter) extends HttpFilters {
 
   override val filters: Seq[EssentialFilter] = {
     Seq(corsFilter, authorizationInterceptor)

@@ -60,7 +60,7 @@ class ProductsController @Inject()(productsRepository: ProductRepository,
         productsRepository.insertProduct(fullProduct).flatMap { productId =>
             productsRepository.insertTags(fullProduct.tags, productId).flatMap { tagInsertionResult =>
                 productsRepository.insertOpinions(fullProduct.opinions, productId).map { opinionInsertionResult =>
-                    Ok(productId)
+                    Ok(Json.toJson(productId))
                 }
             }
         }
@@ -94,7 +94,7 @@ class ProductsController @Inject()(productsRepository: ProductRepository,
                         productsRepository.insertOpinions(fullProduct.opinions, productId).flatMap { opinionInsertionResult =>
                             productsRepository.listProduct(productId).map { productOption =>
                                 if (productOption.isDefined) {
-                                    Ok(productId)
+                                    Ok(Json.toJson(productOption.get))
                                 } else {
                                     NoContent
                                 }
