@@ -13,7 +13,6 @@ import scala.language.postfixOps
   */
 @Singleton
 class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
-
     val dbConfig = dbConfigProvider.get[JdbcProfile]
 
     import dbConfig._
@@ -161,7 +160,7 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
                 productOrder.filter(productOrder => productOrder.orderId === order.id)
                     .flatMap { productOrder =>
                         product.filter(product => product.id === productOrder.productId)
-                            .map{ product =>
+                            .map { product =>
 
                                 (order, productOrder, product)
                             }
@@ -174,6 +173,48 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
     def listProductOrdersByProductId(orderId: Long): Future[Seq[ProductOrder]] = {
         db.run {
             productOrder.filter(_.orderId === orderId).result
+        }
+    }
+
+    def deleteTagsForProduct(productId: Long): Future[Int] = {
+        val deleteTags = tag.filter(_.productId === productId)
+        db.run {
+            deleteTags.delete
+        }
+
+    }
+
+    def deleteOpinionForProduct(productId: Long): Future[Int] = {
+        val deleteOpinions = opinion.filter(_.productId === productId)
+        db.run {
+            deleteOpinions.delete
+        }
+
+    }
+
+    def insertTags(tags: Seq[ProductTag], productId: Long): Future[Seq[Int]] = {
+        val tagsToInsert = tags.map { tag => this.tag.insertOrUpdate(ProductTag(0, productId, tag.text)) }
+        val sequence = DBIO.sequence(tagsToInsert)
+        db.run (
+            sequence
+        )
+
+    }
+
+    def insertOpinions(opinions: Seq[Opinion], productId: Long): Future[Seq[Int]] = {
+        val tagsToInsert = opinions.map { opinion => this.opinion.insertOrUpdate(Opinion(0, productId, opinion.text)) }
+        val sequence = DBIO.sequence(tagsToInsert)
+        db.run (
+            sequence
+        )
+
+    }
+
+    def insertProduct(fullProduct: FullProduct): Future[Long] = {
+        val opinionId =
+            (product returning product.map(_.id)) += Product(-1, fullProduct.name, fullProduct.description, fullProduct.price, 0)
+        db.run {
+            opinionId
         }
     }
 }

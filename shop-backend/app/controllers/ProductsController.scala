@@ -2,9 +2,10 @@ package controllers
 
 import javax.inject.Inject
 import models._
-import play.api.libs.json.{JsString, Json}
+import play.api.libs.json.{JsPath, JsString, Json, Reads}
 import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents}
 import repositories.ProductRepository
+import play.api.libs.functional.syntax._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,14 +33,77 @@ class ProductsController @Inject()(productsRepository: ProductRepository,
                     val fullProduct = FullProduct(product.id, product.name, product.description, product.price, product.category, result._1._2, result._2)
                     Ok(Json.toJson(fullProduct))
                 }
+            }
+    }
+
+    def addProduct: Action[AnyContent] = Action.async { implicit request =>
+        val json = request.body.asJson.get
+        implicit val tagReads: Reads[ProductTag] = (
+            (JsPath \ "id").read[Int] and
+                (JsPath \ "text").read[String]
+            ) (ProductTag.map _)
+
+        implicit val opinionReads: Reads[Opinion] = (
+            (JsPath \ "id").read[Int] and
+                (JsPath \ "text").read[String]
+            ) (Opinion.map _)
+
+        implicit val fullProductReads: Reads[FullProduct] = (
+            (JsPath \ "name").read[String] and
+                (JsPath \ "description").read[String] and
+                (JsPath \ "price").read[Double] and
+                (JsPath \ "opinions").read[Seq[Opinion]] and
+                (JsPath \ "tags").read[Seq[ProductTag]]
+            ) (FullProduct.map _)
+
+        val fullProduct = json.as[FullProduct]
+        productsRepository.insertProduct(fullProduct).flatMap { productId =>
+            productsRepository.insertTags(fullProduct.tags, productId).flatMap { tagInsertionResult =>
+                productsRepository.insertOpinions(fullProduct.opinions, productId).map { opinionInsertionResult =>
+                    Ok(productId)
+                }
+            }
         }
     }
 
-    def addProduct: Action[AnyContent] = Action { implicit request =>
+    def updateProduct: Action[AnyContent] = Action.async { implicit request =>
         val json = request.body.asJson.get
-        val text = json("text").as[String]
-        println(text)
-        Ok("Jim")
+        implicit val tagReads: Reads[ProductTag] = (
+            (JsPath \ "id").read[Int] and
+                (JsPath \ "text").read[String]
+            ) (ProductTag.map _)
+
+        implicit val opinionReads: Reads[Opinion] = (
+            (JsPath \ "id").read[Int] and
+                (JsPath \ "text").read[String]
+            ) (Opinion.map _)
+
+        implicit val fullProductReads: Reads[FullProduct] = (
+            (JsPath \ "name").read[String] and
+                (JsPath \ "description").read[String] and
+                (JsPath \ "price").read[Double] and
+                (JsPath \ "opinions").read[Seq[Opinion]] and
+                (JsPath \ "tags").read[Seq[ProductTag]]
+            ) (FullProduct.map _)
+
+        val fullProduct = json.as[FullProduct]
+        productsRepository.insertProduct(fullProduct).flatMap { productId =>
+            productsRepository.deleteTagsForProduct(productId).flatMap { tagDeletionResult =>
+                productsRepository.deleteOpinionForProduct(productId).flatMap { opinionDeletionResult =>
+                    productsRepository.insertTags(fullProduct.tags, productId).flatMap { tagInsertionResult =>
+                        productsRepository.insertOpinions(fullProduct.opinions, productId).flatMap { opinionInsertionResult =>
+                            productsRepository.listProduct(productId).map { productOption =>
+                                if (productOption.isDefined) {
+                                    Ok(productId)
+                                } else {
+                                    NoContent
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
