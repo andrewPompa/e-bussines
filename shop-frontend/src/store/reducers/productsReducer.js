@@ -8,7 +8,9 @@ import * as productsActions from '../actions/productsActions'
 
 const initialState = {
     products: [],
-    loading: false
+    loading: false,
+    productsAreSearched: false,
+    searchedPhrases: []
 };
 const productsReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -19,7 +21,18 @@ const productsReducer = (state = initialState, action) => {
         case productsActions.PRODUCTS_LOADED:
             console.log(productsActions.PRODUCTS_LOADED);
             console.log(action.payload);
-            return {products: action.payload, loading: false};
+            return {...state, products: action.payload, loading: false};
+        case productsActions.PRODUCTS_ARE_SEARCHED:
+            console.log('serching products');
+            return {...state, productsAreSearched: false};
+        case productsActions.PRODUCTS_SEARCHING_FINISHED:
+            console.log('serching finished');
+            console.log(action.payload);
+            return {...state, productsAreSearched: false, products: action.payload};
+        case productsActions.SEARCHED_PHRASES_LOADED:
+            console.log('SEARCHED_PHRASES_LOADED');
+            console.log(action.payload);
+            return {...state, searchedPhrases: action.payload};
         default:
             return state
     }

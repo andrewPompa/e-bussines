@@ -11,7 +11,7 @@ import AttachMoney from "@material-ui/icons/es/AttachMoney";
 import Typography from "@material-ui/core/es/Typography/Typography";
 import Link from "react-router-dom/es/Link";
 import {connect} from 'react-redux';
-import {getProducts} from "../../store/actions/productsActions";
+import {getProducts, getProductsBySearchPhrase, loadSearchedPhrases} from "../../store/actions/productsActions";
 
 const styles2 = theme => ({
     root: {
@@ -28,36 +28,74 @@ const styles2 = theme => ({
     icon: {
         color: 'rgba(255, 255, 255, 0.54)',
     },
+    link: {
+        color: "#FFFFFF",
+        textDecoration: "none",
+        padding: 16
+    },
 });
 
 class Products extends Component {
     constructor(props) {
         super(props);
         props.loadProducts();
+        props.loadSearchedPhrases();
     }
+
     state = {
         selectedOption: '',
+        options: []
     };
     handleChange = (selectedOption) => {
-        this.setState({selectedOption});
+        if (selectedOption === undefined || selectedOption === null) {
+            this.setState({selectedOption: selectedOption});
+            return;
+        }
         console.log('onSelectedOption');
+        this.setState({selectedOption: selectedOption});
+
+        this.onInputChange(selectedOption.value);
+    };
+    onInputChange = (inputValue) => {
+        console.log(inputValue);
+        if (this.props.areProductsSearched) {
+            return;
+        }
+        if (inputValue === '') {
+            this.props.loadProducts();
+            return;
+        }
+        this.props.searchProducts(inputValue);
     };
 
-    render() {
-        const {selectedOption} = this.state;
-        const {products} = this.props;
+    componentWillReceiveProps(props) {
+        console.log('component have props');
+    }
 
+    render() {
+        const {selectedOption, options, loading} = this.state;
+        const {products, searchedPhrases, searchedProducts} = this.props;
+
+        if (loading === true) {
+            return (<div>Loading data...</div>);
+        }
+        console.log(searchedPhrases);
+        console.log(searchedProducts);
         const productsList = products.map((product) => {
-            return <ListItem key={product.id}>
-                <ListItemText
-                    primary={
-                        <Typography variant="display1" color="inherit">
-                            <Link to={`/product/${product.id}`}>{product.name}</Link> <br/><AttachMoney/>{product.price}
-                        </Typography>
-                    }
-                    secondary={product.description}
-                />
-            </ListItem>
+            return (
+                <Link to={`/product/${product.id}`} className={this.props.classes.link} key={product.id}>
+                    <ListItem >
+                        <ListItemText
+                            primary={
+                                <Typography variant="display1" color="inherit">
+                                    {product.name}<br/><AttachMoney/>{product.price}
+                                </Typography>
+                            }
+                            secondary={product.description}
+                        />
+                    </ListItem>
+                </Link>
+            )
         });
         return (
             <div className="Products">
@@ -66,11 +104,10 @@ class Products extends Component {
                         placeholder={<span><Search/>Wyszukaj produkt...</span>}
                         name="search-product"
                         value={selectedOption}
+                        noResultsText="brak ostatnich wyszukiwań"
                         onChange={this.handleChange}
-                        options={[
-                            {value: 'one', label: 'One'},
-                            {value: 'two', label: 'Two'},
-                        ]}
+                        onInputChange={this.onInputChange}
+                        options={searchedPhrases.map(phrase => ({label: phrase.text, value: phrase.text}))}
                     />
                 </div>
                 <List>
@@ -80,13 +117,21 @@ class Products extends Component {
         );
     }
 }
+
 const mapStateToProps = (state) => {
-    return {products: state.products.products};
+    return {
+        products: state.products.products,
+        loading: state.products.loading,
+        searchedPhrases: state.products.searchedPhrases,
+        areProductsSearched: state.products.productsAreSearched
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loadProducts: () => dispatch(getProducts())
+        loadProducts: () => dispatch(getProducts()),
+        searchProducts: (phrase) => dispatch(getProductsBySearchPhrase(phrase)),
+        loadSearchedPhrases: () => dispatch(loadSearchedPhrases())
     }
 };
 
