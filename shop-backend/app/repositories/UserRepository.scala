@@ -32,6 +32,9 @@ class UserRepository  @Inject()(dbConfigProvider: DatabaseConfigProvider)(implic
     val user = TableQuery[UserTable]
 
 
+    def getUserTable = user
+
+
     def listUserByEmail(email: String) = db.run {
         user.filter(_.email === email).result.headOption
     }

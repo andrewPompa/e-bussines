@@ -38,9 +38,9 @@ create table "tag" (
 );
 
 create table "order" (
-  id   integer not null primary key autoincrement,
+  id      integer not null primary key autoincrement,
   user_id integer not null,
-  done boolean default false,
+  done    boolean                      default false,
   foreign key (user_id) references `user` (id)
 );
 
@@ -61,6 +61,14 @@ create table "user" (
   google_token_expiry_date timestamp,
   github_token             text,
   github_token_expiry_date timestamp
+);
+
+create table "last_search" (
+  "id"        integer not null primary key autoincrement,
+  "user_id"   integer not null,
+  "text"      text    not null,
+  "timestamp" timestamp,
+  foreign key (user_id) references `user` (id)
 );
 
 -- -------
@@ -92,3 +100,4 @@ drop table if exists "product_opinion";
 drop table if exists "opinion";
 drop table if exists "order";
 drop table if exists "pricing";
+drop table if exists "last_search";

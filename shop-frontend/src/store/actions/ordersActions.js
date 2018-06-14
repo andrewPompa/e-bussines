@@ -31,6 +31,11 @@ export const finishOrder = (orderId) => (
                 }
                 return undefined;
             })
-            .then(dispatch(loadOrders()))
+            .then(response => {
+                //fixme: why in 'then' clause request is executing faster than finishing order?
+                setTimeout('', 2000);
+                dispatch(loadOrders())
+            })
     }
 );
+

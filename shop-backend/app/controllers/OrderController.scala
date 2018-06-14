@@ -5,27 +5,48 @@ import models._
 import play.api.libs.json.{JsPath, Json, Reads}
 import play.api.libs.functional.syntax._
 import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents}
-import repositories.ProductRepository
+import repositories.{ProductRepository, UserRepository}
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.{ExecutionContext, Future}
 
 class OrderController @Inject()(productRepository: ProductRepository,
+                                userRepository: UserRepository,
                                 cc: MessagesControllerComponents)
                                (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
-    def addOrder(): Action[AnyContent] = Action { implicit request =>
+    def addOrder(): Action[AnyContent] = Action.async { implicit request =>
         val json = request.body.asJson.get
         implicit val productsRead: Reads[BasketItem] = (
             (JsPath \ "id").read[Long] and
                 (JsPath \ "quantity").read[Int]
             ) (BasketItem.apply _)
         val products = json.as[Seq[BasketItem]]
-        //        productRepository.saveOrder(products)
-        Ok(Json.toJson(":("))
+        val userEmailOption = request.session.get("user")
+        var userEmail = "konto.do.testow123@gmail.com"
+        if (userEmailOption.isDefined) {
+            userEmail = userEmailOption.get
+        }
+        userRepository.listUserByEmail(userEmail).flatMap { userOption =>
+            if (userOption.isEmpty) {
+                Future {
+                    NoContent
+                }
+            } else {
+                val order = Order(-1, userOption.get.id, done = false)
+                productRepository.insertOrder(order).flatMap { orderIndex =>
+                    val productOrders = products.map { product =>
+                        ProductOrder(-1, orderIndex, product.productId, product.quantity)
+                    }
+                    productRepository.insertProductOrders(productOrders).map { productOrdersIndexes =>
+                        Ok(Json.toJson(productOrdersIndexes))
+                    }
+                }
+            }
+
+        }
     }
 
     def finishOrder(orderId: Long): Action[AnyContent] = Action.async { implicit request =>
-        request
         productRepository.listOrder(orderId).flatMap { orderOption =>
             if (orderOption.isEmpty) {
                 Future {
