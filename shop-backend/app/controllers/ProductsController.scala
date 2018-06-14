@@ -1,15 +1,20 @@
 package controllers
 
+import java.sql.Timestamp
+import java.util.Date
+
 import javax.inject.Inject
 import models._
 import play.api.libs.json.{JsPath, JsString, Json, Reads}
 import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents}
-import repositories.ProductRepository
+import repositories.{ProductRepository, UserRepository}
 import play.api.libs.functional.syntax._
 
+import scala.collection.mutable.ListBuffer
 import scala.concurrent.{ExecutionContext, Future}
 
 class ProductsController @Inject()(productsRepository: ProductRepository,
+                                   userRepository: UserRepository,
                                    cc: MessagesControllerComponents)
                                   (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
     def getProducts: Action[AnyContent] = Action.async {
@@ -34,6 +39,36 @@ class ProductsController @Inject()(productsRepository: ProductRepository,
                     Ok(Json.toJson(fullProduct))
                 }
             }
+    }
+
+    def getProductByPhrase(phrase: String): Action[AnyContent] = Action.async { request =>
+        println("searching product: " + phrase)
+        val userEmailOption = request.session.get("user")
+        var userEmail = "konto.do.testow123@gmail.com"
+        if (userEmailOption.isDefined) {
+            userEmail = userEmailOption.get
+        }
+        userRepository.listUserByEmail(userEmail).flatMap { userOption =>
+            if (userOption.isEmpty) {
+                Future {
+                    NoContent
+                }
+            } else {
+                productsRepository.listAllTags().map { productTagsMonad =>
+                    val productListBuffer = new ListBuffer[Product]
+                    val products = productTagsMonad.filter(_._1.name.contains(phrase)).map(_._1)
+                    productListBuffer ++= products
+                    val tags = productTagsMonad
+                        .filter(_._2.text.contains(phrase))
+                        .filter(productTagMonad =>
+                            !products.exists(product => product.id == productTagMonad._1.id))
+                        .map(_._1)
+                    productListBuffer ++= tags
+                    productsRepository.insertLastSearch(LastSearch(0, userOption.get.id, phrase))
+                    Ok(Json.toJson(productListBuffer.distinct))
+                }
+            }
+        }
     }
 
     def addProduct: Action[AnyContent] = Action.async { implicit request =>

@@ -138,6 +138,22 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, user
             ) += (name, description, price, category)
     }
 
+    class LastSearchTable(tag: Tag) extends Table[LastSearch](tag, "last_search") {
+
+        def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+
+        def userId = column[Long]("user_id")
+
+        def text = column[String]("text")
+
+
+        def user_fk = foreignKey("user_id_key", userId, user)(_.id)
+
+        def * = (id, userId, text) <> ((LastSearch.apply _).tupled, LastSearch.unapply)
+    }
+
+    val lastSearch = TableQuery[LastSearchTable]
+
     /**
       * List all the people in the database.
       */
@@ -152,13 +168,16 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, user
         }
     }
 
+
     def listOpinionOfProduct(productId: Long): Future[Seq[Opinion]] = {
         val query = opinion.filter(_.productId === productId)
         db.run {
             query.result
         }
     }
-
+    def listTags(): Future[Seq[ProductTag]] = db.run {
+        tag.result
+    }
     def listTagOfProduct(productId: Long): Future[Seq[ProductTag]] = {
         val query = tag.filter(_.productId === productId)
         db.run {
@@ -187,7 +206,12 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, user
     def listProductOrdersByOrderId(orderId: Long): Future[Seq[ProductOrder]] = db.run {
         productOrder.filter(_.orderId === orderId).result
     }
-
+    def listAllTags(): Future[Seq[(Product, ProductTag)]] = db.run{
+        product.flatMap { product =>
+            tag.filter(_.productId === product.id)
+                .map{ tag => (product, tag) }
+        }.result
+    }
     def listAllOrders(): Future[Seq[(Order, ProductOrder, Product)]] = {
         db.run {
             order.flatMap { order =>
@@ -272,5 +296,17 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider, user
         db.run (
             sequence
         )
+    }
+
+    def insertLastSearch(lastSearch: LastSearch): Future[Long] = {
+        val orderId =
+            (this.lastSearch returning this.lastSearch.map(_.id)) += lastSearch
+        db.run {
+            orderId
+        }
+    }
+
+    def listPhrasesForUser(userId: Long): Future[Seq[LastSearch]] = db.run {
+        lastSearch.filter(_.userId === userId).result
     }
 }

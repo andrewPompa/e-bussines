@@ -3,24 +3,27 @@
 # ~~~~
 
 # Home page
-GET         /auth/google                controllers.GoogleOAuthController.onAuthResponse
-GET         /login/google               controllers.GoogleOAuthController.onGoogleLogin
-GET         /auth/github                controllers.GithubOAuthController.onAuthResponse
-GET         /login/github               controllers.GithubOAuthController.onGithubLogin
+GET         /auth/google                    controllers.GoogleOAuthController.onAuthResponse
+GET         /login/google                   controllers.GoogleOAuthController.onGoogleLogin
+GET         /auth/github                    controllers.GithubOAuthController.onAuthResponse
+GET         /login/github                   controllers.GithubOAuthController.onGithubLogin
 
-GET         /products                   controllers.ProductsController.getProducts
-POST        /products                   controllers.ProductsController.addProduct
-PUT         /products                   controllers.ProductsController.updateProduct
-GET         /products/:productId        controllers.ProductsController.getProduct(productId: Long)
+GET         /products                       controllers.ProductsController.getProducts
+POST        /products                       controllers.ProductsController.addProduct
+PUT         /products                       controllers.ProductsController.updateProduct
+GET         /products/:productId            controllers.ProductsController.getProduct(productId: Long)
+GET         /products/search/:phrase        controllers.ProductsController.getProductByPhrase(phrase: String)
 
-GET         /opinion                    controllers.OpinionController.getAll
-GET         /opinion/:productId         controllers.OpinionController.getOpinionOfProductId(productId: Long)
-POST        /opinion/:productId         controllers.OpinionController.addOpinion(productId: Long)
+GET         /opinion                        controllers.OpinionController.getAll
+GET         /opinion/:productId             controllers.OpinionController.getOpinionOfProductId(productId: Long)
+POST        /opinion/:productId             controllers.OpinionController.addOpinion(productId: Long)
 
-POST        /order                      controllers.OrderController.addOrder
-GET         /orders                     controllers.OrderController.getOrders
-GET         /orders/:orderId/finish                      controllers.OrderController.finishOrder(orderId: Long)
+POST        /order                          controllers.OrderController.addOrder
+GET         /orders                         controllers.OrderController.getOrders
+GET         /orders/:orderId/finish         controllers.OrderController.finishOrder(orderId: Long)
+
+GET         /phrases/searched         controllers.PhrasesController.getSearchedPhrases
 
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                   controllers.Assets.versioned(path="/public", file: Asset)
