@@ -1,1 +1,3 @@
-export const API_URL = 'http://localhost:3000';
+export const API_URL = '/api';
+export const GITHUB_URL = 'https://github.com/login?client_id=4b2544382c2eed4d990f&return_to=%2Flogin%2Foauth%2Fauthorize%3Fclient_id%3D4b2544382c2eed4d990f%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A9090%252Fauth%252Fgithub%26scope%3Duser%26state%3DCX21423EUOKTSCI412AFASFfY1A412737jzdjz083';
+export const GOOGLE_URL = 'https://accounts.google.com/signin/oauth/identifier?client_id=171845504489-24c8j692bbpb45ph62b10dtfbnsr5kq7.apps.googleusercontent.com&as=neu-uIfwa8IxOPMIemPlSw&destination=http%3A%2F%2Flocalhost%3A9090&approval_state=!ChRlSjY3MTVqV3dtWUhiNmt5Q0tWTBIfc3ltTWYyOFhncm9VOERFdWhZOThQYzhsQW1tQVFCWQ%E2%88%99AB8iHBUAAAAAWyYwXV43TLpSMv71kyb-s0SVMn6lUfvc&xsrfsig=AHgIfE8_7ZzQM6R6Ibsz8Cp7hJ6-ul8Dxg&flowName=GeneralOAuthFlow';

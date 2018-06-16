@@ -113,7 +113,7 @@ export function tagTextChange(tag, text) {
 export const loadProduct = (id) => (
     (dispatch) => {
         (productLoading());
-        fetch(`${API_URL}/products/${id}`)
+        fetch(`${API_URL}/products/${id}`, {credentials: "same-origin"})
             .then(response => {
                 if (response.status === 200) {
                     return response.json();
@@ -131,6 +131,7 @@ export const addOpinion = (productId, text) => (
         fetch(`${API_URL}/opinion/${productId}`, {
             body: JSON.stringify({'text': text}),
             cache: 'no-cache',
+            credentials: "same-origin",
             headers: {
                 'content-type': 'application/json'
             },
@@ -155,6 +156,7 @@ export const addProduct = (product) => (
         fetch(`${API_URL}/products`, {
             body: JSON.stringify(product),
             cache: 'no-cache',
+            credentials: "same-origin",
             headers: {
                 'content-type': 'application/json'
             },
@@ -174,6 +176,7 @@ export const updateProduct = (product) => (
         fetch(`${API_URL}/products/`, {
             body: JSON.stringify(product),
             cache: 'no-cache',
+            credentials: "same-origin",
             headers: {
                 'content-type': 'application/json'
             },

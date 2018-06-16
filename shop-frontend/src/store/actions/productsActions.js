@@ -4,6 +4,7 @@ export const PRODUCTS_LOADED = "[PRODUCTS] PRODUCTS_LOADED";
 export const SEARCHED_PHRASES_LOADED = "[PRODUCTS] SEARCHED_PHRASES_LOADED";
 export const PRODUCTS_ARE_SEARCHED = "[PRODUCTS] PRODUCTS_ARE_SEARCHED";
 export const PRODUCTS_SEARCHING_FINISHED = "[PRODUCTS] PRODUCTS_SEARCHING_FINISHED";
+export const PRODUCTS_RESET = "[PRODUCTS] PRODUCTS_RESET";
 
 export function productsLoading() {
     return {type: PRODUCTS_LOADING}
@@ -35,10 +36,16 @@ export function searchedPhrasesLoaded(searchedPhrases) {
     }
 }
 
+export function resetProducts() {
+    return {
+        type: PRODUCTS_RESET
+    }
+}
+
 export const getProducts = () => (
     (dispatch) => {
         (productsLoading());
-        fetch(`${API_URL}/products`)
+        fetch(`${API_URL}/products`, {credentials: "same-origin"})
             .then(response => {
                 if (response.ok) {
                     console.log(response);
@@ -54,7 +61,7 @@ export const getProducts = () => (
 export const getProductsBySearchPhrase = (phrase) => (
     (dispatch) => {
         (productsAreSearched());
-        fetch(`${API_URL}/products/search/${phrase}`)
+        fetch(`${API_URL}/products/search/${phrase}`, {credentials: "same-origin"})
             .then(response => {
                 if (response.ok) {
                     console.log(response);
@@ -69,7 +76,7 @@ export const getProductsBySearchPhrase = (phrase) => (
 
 export const loadSearchedPhrases = () => (
     (dispatch) => {
-        fetch(`${API_URL}/phrases/searched`)
+        fetch(`${API_URL}/phrases/searched`, {credentials: "same-origin"})
             .then(response => {
                 if (response.ok) {
                     console.log(response);
