@@ -1,4 +1,4 @@
-import * as opinionsActions from '../actions/ordersActions';
+import * as ordersActions from '../actions/ordersActions';
 const initialState = {
     data: [],
     ordersLoaded: false
@@ -6,11 +6,13 @@ const initialState = {
 
 const ordersReducer = (state = initialState, action) => {
     switch (action.type) {
-        case opinionsActions.ORDERS_LOADED:
+        case ordersActions.ORDERS_LOADED:
             state.data = action.payload;
             state.ordersLoaded = true;
             console.log(state);
             return {...state};
+        case ordersActions.RESET_ORDERS:
+            return {...initialState};
         default:
             return state
     }

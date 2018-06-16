@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
 import './Products.css';
-import {withStyles} from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Search from '@material-ui/icons/Search';
-import AttachMoney from "@material-ui/icons/es/AttachMoney";
-import Typography from "@material-ui/core/es/Typography/Typography";
-import Link from "react-router-dom/es/Link";
+import AttachMoney from "@material-ui/icons/AttachMoney";
+import Typography from "@material-ui/core/Typography/Typography";
+import Link from "react-router-dom/Link";
 import {connect} from 'react-redux';
 import {getProducts, getProductsBySearchPhrase, loadSearchedPhrases} from "../../store/actions/productsActions";
 

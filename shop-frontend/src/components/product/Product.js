@@ -1,17 +1,17 @@
 import React from 'react';
 import './Product.css';
-import Typography from "@material-ui/core/es/Typography/Typography";
-import Chip from "@material-ui/core/es/Chip/Chip";
+import Typography from "@material-ui/core/Typography/Typography";
+import Chip from "@material-ui/core/Chip/Chip";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import WorkIcon from '@material-ui/icons/Work';
 import AddShoppingCart from '@material-ui/icons/AddShoppingCart';
-import Button from "@material-ui/core/es/Button/Button";
+import Button from "@material-ui/core/Button";
 import TextField from '@material-ui/core/TextField';
 import {connect} from 'react-redux';
-import {withStyles} from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import {addProductToBasket} from "../../store/actions/basketActions";
 import {addOpinion, loadProduct} from "../../store/actions/productActions";
 

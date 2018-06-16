@@ -33,6 +33,8 @@ const productsReducer = (state = initialState, action) => {
             console.log('SEARCHED_PHRASES_LOADED');
             console.log(action.payload);
             return {...state, searchedPhrases: action.payload};
+        case productsActions.PRODUCTS_RESET:
+            return {...state};
         default:
             return state
     }

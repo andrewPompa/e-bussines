@@ -30,7 +30,7 @@ class GoogleOAuthController @Inject()(productRepository: ProductRepository,
                     val googleAuthResponse = googleAuthService.getTokenResponse(response)
                     googleAuthService.getUser(googleAuthResponse).flatMap { userInfoResponse =>
                         authenticationService.addGoogleUser(userInfoResponse.email, googleAuthResponse.accessToken, UserRole.User).map{user =>
-                            Redirect(routes.ProductsController.getProducts()).withSession(("user", user.email), ("googleToken", user.googleToken.get))
+                            Redirect("/shop").withSession(("user", user.email), ("googleToken", user.googleToken.get))
                         }
                     }
                 }

@@ -1,12 +1,12 @@
 import React from 'react';
-import Typography from "@material-ui/core/es/Typography/Typography";
+import Typography from "@material-ui/core/Typography/Typography";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
 import {connect} from 'react-redux';
-import {withStyles} from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import {
     addOpinion, addProduct,
     loadProduct,
@@ -17,7 +17,7 @@ import {
     productSetName,
     productSetPrice, resetProduct, tagTextChange, updateProduct
 } from "../../store/actions/productActions";
-import Button from "@material-ui/core/es/Button/Button";
+import Button from "@material-ui/core/Button";
 import Save from '@material-ui/icons/Save';
 import {Redirect} from "react-router-dom";
 

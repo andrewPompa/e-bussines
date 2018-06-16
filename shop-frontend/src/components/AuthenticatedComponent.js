@@ -15,9 +15,7 @@ export default function requireAuthentication(Component) {
 
         checkAuth() {
             if (!this.props.isAuthenticated) {
-                //todo: redirecting to login path when user is not logged in
-                // let redirectAfterLogin = this.props.location.pathname;
-                // this.props.dispatch(pushState(null, `/login?next=${redirectAfterLogin}`));
+                this.props.history.go('/github/login');
             }
         }
 
@@ -26,7 +24,7 @@ export default function requireAuthentication(Component) {
                 <div>
                     {this.props.isAuthenticated === true
                         ? <Component {...this.props}/>
-                        : null
+                        : ''
                     }
                 </div>
             )
@@ -35,7 +33,6 @@ export default function requireAuthentication(Component) {
     }
 
     const mapStateToProps = (state) => ({
-        token: state.user.token,
         userName: state.user.userName,
         isAuthenticated: state.user.isAuthenticated
     });
