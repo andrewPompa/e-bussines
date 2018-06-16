@@ -18,7 +18,10 @@ class AuthenticationInterceptor @Inject()(val mat: Materializer, router: Router,
         "google_auth" -> router.documentation.find(_._2 == "/auth/google").map(_._2).get,
         "github" -> router.documentation.find(_._2 == "/login/github").map(_._2).get,
         "github_auth" -> router.documentation.find(_._2 == "/auth/github").map(_._2).get,
-        "test" -> "/"
+        "logout" -> router.documentation.find(_._2 == "/api/user/logout").map(_._2).get,
+        "index" -> "/",
+        "service-worker" -> "/service-worker.js",
+        "shop" -> "/shop"
     )
 
     override def apply(next: RequestHeader => Future[mvc.Result])(request: RequestHeader): Future[mvc.Result] = {
@@ -39,7 +42,7 @@ class AuthenticationInterceptor @Inject()(val mat: Materializer, router: Router,
     }
 
     private def authorizationRequired(request: mvc.RequestHeader) = {
-        !LOGIN_PATHS.exists(_._2 == request.path)
+        !(LOGIN_PATHS.exists(_._2 == request.path) || request.path.startsWith("/static/") || request.path.startsWith("/shop/index.html"))
     }
 
     private def getUser(header: RequestHeader): Future[Option[User]] = {

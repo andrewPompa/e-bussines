@@ -31,7 +31,7 @@ class GithubOAuthController @Inject()(productRepository: ProductRepository,
                     val githubTokenResponse = githubAuthService.getTokenResponse(response)
                     githubAuthService.getUser(githubTokenResponse, githubTokenResponse.accessToken).flatMap { userInfoResponse =>
                         authenticationService.addGithubUser(userInfoResponse.email, githubTokenResponse.accessToken, UserRole.User).map{user =>
-                            Redirect(routes.ProductsController.getProducts()).withSession(("user", user.email), ("githubToken", user.githubToken.get))
+                            Redirect("/shop").withSession(("user", user.email), ("githubToken", user.githubToken.get))
                         }
                     }
                 }
