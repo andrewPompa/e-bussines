@@ -30,7 +30,7 @@ export const userLogout = () => (
 export const userAuthenticate = () => (
     (dispatch) => {
         (userIsAuthenticating());
-        fetch(`${API_URL}/user/status`, {credentials: "same-origin"})
+        fetch(`${API_URL}/user/status`, {headers: {'content-type': 'application/json', 'accept': 'application/json'}, credentials: "same-origin"})
             .then(response => {
                 if (response.status === 200) {
                     return response.json();

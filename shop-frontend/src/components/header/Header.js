@@ -11,40 +11,52 @@ import {resetProduct} from "../../store/actions/productActions";
 import {userAuthenticate, userLogout} from "../../store/actions/userActions";
 import {resetOrders} from "../../store/actions/ordersActions";
 import {resetBasket} from "../../store/actions/basketActions";
-import {GOOGLE_URL, GITHUB_URL} from "../../AppConstans";
+import {GITHUB_URL, GOOGLE_URL} from "../../AppConstans";
 
-const styles = {
-    root: {
-        flexGrow: 1,
-    },
-    flex: {
-        flex: 1,
-    },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
-    },
-    link: {
-        color: "#FFFFFF",
-        textDecoration: "none",
-        padding: 16
-    },
-    linkButton: {
-        color: "#607D8B",
+const styles = (theme) => {
+    return ({
+        root: {
+            flexGrow: 1,
+        },
+        flex: {
+            flex: 1,
+        },
+        menuButton: {
+            marginLeft: -12,
+            marginRight: 20,
+        },
+        link: {
+            color: "#FFFFFF",
+            textDecoration: "none",
+            padding: 16
+        },
+        linkButton: {
+            color: "#607D8B",
 
-    },
-    linkButtonGoogle: {
-        color: "#eee6ff",
-        backgroundColor: "#021aee"
+        },
+        linkButtonGoogle: {
+            marginLeft: theme.spacing.unit,
+            color: "#eee6ff",
+            backgroundColor: "#021aee"
 
-    },
-    linkButtonGithub: {
-        color: "#B0BEC5",
-        backgroundColor: "#212121"
-    },
-    appBar: {
-        backgroundColor: "#41c300"
-    }
+        },
+        hrefButtonGoogle: {
+            color: "#eee6ff",
+            textDecoration: "none"
+        },
+        linkButtonGithub: {
+            marginLeft: theme.spacing.unit,
+            color: "#B0BEC5",
+            backgroundColor: "#212121"
+        },
+        hrefButtonGithub: {
+            color: "#B0BEC5",
+            textDecoration: "none"
+        },
+        appBar: {
+            backgroundColor: "#41c300"
+        }
+    })
 };
 
 class Header extends Component {
@@ -154,7 +166,9 @@ class Header extends Component {
         console.log('showing loggin button');
 
         return (
-            <a href={`${GOOGLE_URL}`}>Google</a>
+            <Button className={this.props.classes.linkButtonGoogle}>
+                <a href={`${GOOGLE_URL}`} className={this.props.classes.hrefButtonGoogle}>Zaloguj przez Google</a>
+            </Button>
         );
     }
 
@@ -166,12 +180,9 @@ class Header extends Component {
         console.log('showing loggin button');
 
         return (
-            <Link className={this.props.classes.link} to='/sample'>
-                <Button className={this.props.classes.linkButtonGithub}
-                        onClick={() => this.setState({redirectToGithubLogin: true})}>
-                    Zaloguj przez Github
-                </Button>
-            </Link>
+            <Button className={this.props.classes.linkButtonGithub}>
+                <a href={`${GITHUB_URL}`} className={this.props.classes.hrefButtonGithub}>Zaloguj przez Github</a>
+            </Button>
         );
     }
 
