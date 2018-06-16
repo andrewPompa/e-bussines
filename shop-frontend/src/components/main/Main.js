@@ -14,12 +14,12 @@ const Main = () => (
     <main>
         <Switch>
             <Route exact path='/sample' component={requireAuthentication(Sample)} />
-            <Route exact path='/basket' component={Basket} />
-            <Route exact path='/products' component={Products} />
-            <Route exact path='/product/:id' component={Product} />
-            <Route exact path='/products-management/' component={ProductsManagement} />
-            <Route exact path='/product-management/:id' component={ProductManagement} />
-            <Route exact path='/orders' component={Orders} />
+            <Route exact path='/basket' component={requireAuthentication(Basket)} />
+            <Route exact path='/products' component={requireAuthentication(Products)} />
+            <Route exact path='/product/:id' component={requireAuthentication(Product)} />
+            <Route exact path='/products-management/' component={requireAuthentication(ProductsManagement)} />
+            <Route exact path='/product-management/:id' component={requireAuthentication(ProductManagement)} />
+            <Route exact path='/orders' component={requireAuthentication(Orders)} />
         </Switch>
     </main>
 );

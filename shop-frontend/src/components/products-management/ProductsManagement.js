@@ -1,16 +1,17 @@
 import AddIcon from '@material-ui/icons/Add';
 import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import 'react-select/dist/react-select.css';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import AttachMoney from "@material-ui/icons/es/AttachMoney";
-import Typography from "@material-ui/core/es/Typography/Typography";
-import Link from "react-router-dom/es/Link";
+import AttachMoney from "@material-ui/icons/AttachMoney";
+import Typography from "@material-ui/core/Typography/Typography";
+import Link from "react-router-dom/Link";
 import {connect} from 'react-redux';
 import {getProducts} from "../../store/actions/productsActions";
-import Button from "@material-ui/core/es/Button/Button";
+import Button from "@material-ui/core/Button";
+import {withRouter} from "react-router-dom";
 
 const styles = theme => ({
     root: {
@@ -29,7 +30,7 @@ const styles = theme => ({
     },
 });
 
-class Products extends Component {
+class ProductsManagement extends Component {
     constructor(props) {
         super(props);
         props.loadProducts();
@@ -82,4 +83,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Products));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(withRouter(ProductsManagement)));

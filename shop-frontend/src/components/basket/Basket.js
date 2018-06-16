@@ -5,10 +5,10 @@ import Avatar from '@material-ui/core/Avatar';
 import FlightTakeoff from '@material-ui/icons/FlightTakeoff';
 import CardTravel from '@material-ui/icons/CardTravel';
 import HighlightOff from '@material-ui/icons/HighlightOff';
-import Button from "@material-ui/core/es/Button/Button";
+import Button from "@material-ui/core/Button";
 import Typography from '@material-ui/core/Typography';
 import {connect} from 'react-redux';
-import {withStyles} from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import {
     decrementQuantityOfProduct,
     incrementQuantityOfProduct, orderProducts,

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {withStyles} from '@material-ui/core/styles';
+import withStyles from '@material-ui/core/styles/withStyles';
 import 'react-select/dist/react-select.css';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
@@ -11,7 +11,7 @@ import {finishOrder, loadOrders} from "../../store/actions/ordersActions";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Button from "@material-ui/core/es/Button/Button";
+import Button from "@material-ui/core/Button";
 import Save from '@material-ui/icons/Save';
 import PlaylistAddCheck from '@material-ui/icons/PlaylistAddCheck';
 
